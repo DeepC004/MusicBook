@@ -1,7 +1,8 @@
 # MusicBook
 
 MusicBook is an online Music Library which lets you browse through thousands of songs and artists on the web <br/>
-Cool features:<br/>
+
+Cool features:
 
 1. Search up your favourite song on the go <br/>
 2. Follow up your favourite artist and keep track of their latest releases <br/>
