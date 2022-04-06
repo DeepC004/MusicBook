@@ -1,0 +1,41 @@
+{% extends "layout.html" %} {% block title %} Login {% endblock %} {% block head
+%} <link rel="stylesheet" href="../static/css/login.css" /> {% endblock %} {%
+block body %}
+<div class="container">
+	<div class="wrapper">
+		<header class="welcome__header">
+			<h1>Welcome to MusicBook!</h1>
+		</header>
+
+		<main class="input__form">
+			<form action="/login_validate" method="POST">
+				<div class="user__input">
+					<div class="row">
+						<input
+							type="email"
+							name="email"
+							placeholder="Enter your email"
+							required
+						/>
+					</div>
+					<div class="row">
+						<input
+							type="password"
+							name="password"
+							placeholder="Enter your password"
+							required
+						/>
+					</div>
+					<div class="row">
+						<button type="submit" class="submit__button">Login</button>
+					</div>
+				</div>
+			</form>
+
+			<div class="signup">
+				<a href="/registration">New here? Make an account!</a>
+			</div>
+		</main>
+	</div>
+</div>
+{% endblock %}

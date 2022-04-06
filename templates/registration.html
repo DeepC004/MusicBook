@@ -1,0 +1,63 @@
+{% extends "layout.html" %} {% block title %} Registration {% endblock %} {%
+block head %} <link rel="stylesheet" href="../static/css/registration.css" /> {%
+endblock %} {% block body %}
+<div class="container">
+	<div class="wrapper">
+		<header class="registration__header">
+			<h1>Registration</h1>
+		</header>
+
+		<main class="input__form">
+			<form action="/register_user" method="POST">
+				<div class="user__input">
+					<div class="row">
+						<input
+							type="text"
+							name="name"
+							placeholder="Enter your name"
+							required
+						/>
+					</div>
+					<div class="row">
+						<input
+							type="tel"
+							name="phone"
+							placeholder="Enter your phone number"
+							required
+						/>
+					</div>
+					<div class="row">
+						<input
+							type="email"
+							name="email"
+							placeholder="Enter your email"
+							required
+						/>
+					</div>
+					<div class="row">
+						<input
+							type="password"
+							name="password"
+							placeholder="Enter your password"
+							pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+							title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters"
+							required
+						/>
+						<!-- Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
+
+"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" -->
+					</div>
+					<div class="row">
+						<center>
+							<button type="submit" class="submit__button">Register</button>
+							<p>
+								By registering, you agree that you are above 13 years of age
+							</p>
+						</center>
+					</div>
+				</div>
+			</form>
+		</main>
+	</div>
+</div>
+{% endblock %}
