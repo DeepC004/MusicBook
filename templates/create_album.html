@@ -1,0 +1,60 @@
+{% extends "app_layout.html" %} {% block title %} Create Album {% endblock %} {%
+block head %}
+<link rel="stylesheet" href="../static/css/create_album.css" />
+{% endblock %} {% block page_title %}
+
+<h1>Create Album</h1>
+
+{% endblock %} {% block body %}
+<div class="wrapper">
+	<form action="/new_album" method="POST">
+		<div class="container">
+			<div class="album__art">
+				<label for="album__art" class="plus__button"
+					><i class="fa-solid fa-plus"></i
+				></label>
+				<input type="file" name="album__art" id="album__art" required />
+			</div>
+			<div class="album__details">
+				<div class="add__song">
+					<textarea
+						type="text"
+						name="song__name"
+						placeholder="Enter song name"
+						required
+					></textarea>
+				</div>
+				<div class="album__name">
+					<input
+						type="text"
+						name="album__name"
+						placeholder="Enter album name"
+						required
+					/>
+				</div>
+				<div class="album__genre">
+					<input
+						type="text"
+						name="album__genre"
+						placeholder="Enter album genre"
+						required
+					/>
+				</div>
+				<div class="album__year">
+					<input
+						type="number"
+						name="album__year"
+						placeholder="Enter album year"
+						min="1983"
+						max="2025"
+						required
+					/>
+				</div>
+				<button id="release__button" type="submit">RELEASE</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="../static/js/create_album.js"></script>
+{% endblock %}
