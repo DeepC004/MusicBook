@@ -1,3 +1,4 @@
+import datetime
 from enum import auto
 from flask import Flask, flash, redirect, render_template, request, session
 from flask.templating import render_template
@@ -108,7 +109,30 @@ def logout():
 @app.route('/results')
 def results():
     return render_template('results.html')
+
+@app.route('/create_album')
+def create_album():
+    return render_template('create_album.html')
  
+@app.route('/new_album', methods=['POST', 'GET'])
+def new_album():
+    if request.method == 'POST':
+        songs = request.form["song__name"]
+        album = request.form["album__name"]
+        genre = request.form["album__genre"]
+        durations = request.form["song__durations"]
+        year = datetime.date.today().strftime("%Y")
+        songs = songs.splitlines()
+        durations = durations.splitlines()
+        print(songs)
+        print(album)
+        print(genre)
+        print(durations)
+        print(year)
+    else:
+        return render_template('error.html')
+    return redirect('/')
+
 # class USERS(db.Model):
 #     user_id = db.Column(db.Integer, primary_key = True)
  
