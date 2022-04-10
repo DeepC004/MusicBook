@@ -2,3 +2,4 @@
 mySQL_connect.yaml
 /templates/test.html
 *.pyc
+/__pycache__
