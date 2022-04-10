@@ -78,7 +78,7 @@ input::-webkit-inner-spin-button {
 .add__song,
 .album__name,
 .album__genre,
-.album__year {
+.song__durations {
 	margin: 0.5em 0;
 }
 
