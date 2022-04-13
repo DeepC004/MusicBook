@@ -1,0 +1,95 @@
+{% extends "app_layout.html" %} {% block title %} User Library {% endblock %} {%
+	block head %}
+	<link rel="stylesheet" href="../static/css/user.css" />
+	{% endblock %} {% block page_title %}
+	 
+	<h1>Welcome #Username</h1>
+	 
+	{% endblock %} {% block body %}
+	<div class="wrapper">
+		<div class="user_details">
+			<div class="show_image">Image here</div>
+			<div class="show_details">
+				<div class="songs_count">
+					<p>Songs: #count</p>
+					<p>Playlists: #count</p>
+				</div>
+				<div class="followers_count">
+					<p>Followers: #count</p>
+					<p>Following: #count</p>
+				</div>
+			</div>
+		</div>
+		<div class="bottom_half">
+			<div class="release">
+				<div class="release_album button btn btn-secondary" type="button">
+					Release album
+				</div>
+				<div class="create_playlist button btn btn-secondary" type="button">
+					Create playlist
+				</div>
+			</div>
+			<div class="show_playlists scroll">
+				<ul class="list">
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+					<li class="item_style">
+						<div class="list_image">Image here</div>
+						<div class="list_data">
+							<p>Song name</p>
+							<p>Duration</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	 
+	{% endblock %}
