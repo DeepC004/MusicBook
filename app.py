@@ -1,14 +1,18 @@
 import datetime
 import time
 import os
+import base64
 from enum import auto
 from flask import Flask, flash, redirect, render_template, request, session
+from flask.helpers import url_for
 from flask.templating import render_template
 from flask_mysqldb import MySQL
+from werkzeug.datastructures import FileStorage
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from helper import apology, login_required
 from tempfile import mkdtemp
+from PIL import Image
  
  
 app = Flask(__name__)
@@ -44,21 +48,47 @@ def index():
             test_search = request.form.get("search")
             print(test_search)
             search = "%" + request.form.get("search") + "%"
-            getAlbumQuery = '''SELECT * FROM album WHERE album_name LIKE %s'''
+            getAlbumQuery = '''SELECT * FROM ALBUM WHERE ALBUM_NAME LIKE %s'''
             cursor.execute(getAlbumQuery, [search])
             albums = cursor.fetchall()
             len_albums = len(albums)
-            getUserQuery = '''SELECT * FROM user WHERE name LIKE %s'''
+            getUserQuery = '''SELECT * FROM USER WHERE name LIKE %s'''
             cursor.execute(getUserQuery, [search])
             artists = cursor.fetchall()
             len_artists = len(artists)
-            getSongQuery = '''SELECT * FROM song WHERE song_name LIKE %s'''
+            getSongQuery = '''SELECT * FROM SONG WHERE song_name LIKE %s'''
             cursor.execute(getSongQuery, [search])
             songs = cursor.fetchall()
-            len_songs=len(songs)
+            len_songs = len(songs)
+            # print('Songs: ', songs)
+            song_list = []
+            for i in range(len_songs):
+                song_list.append(songs[i])
+            album_list = []
+            for i in range(len_songs):
+                album_list.append(albums[i])
+            joinTablesQuery = '''SELECT S.SONG_NAME song, A.ALBUM_NAME album, A.ALBUM_PHOTO album_art, U.NAME user FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
+            cursor.execute(joinTablesQuery, [search, search, search])
+            jointQuery = cursor.fetchall()
+            print('\n\nJOINT TABLE QUERY: \n', jointQuery)
+            results = []
+            for i in range(len(jointQuery)):
+                results.append(jointQuery[i])
+            print('RESULTS:\n\n', results)
+            for i in range(len(jointQuery)):
+                imageFile = results[i]['album_art'].decode('UTF-8')
+                fileName = imageFile.split(' ')
+                filename = fileName[1]
+                fileName = 'images/album/' + filename.strip("'")
+                imageInfo = url_for('static', filename = fileName)
+                results[i]['album_art'] = imageInfo
+
+            # print('Albums: ', albums)
+            # print('Artists: ', artists)
             db.connection.commit()
             cursor.close()
-            return render_template('results.html', albums = albums, artists = artists, songs = songs, len_albums = len_albums, len_artists = len_artists, len_songs = len_songs)
+            # return render_template('results.html', albums = albums, artists = artists, songs = songs, len_albums = len_albums, len_artists = len_artists, len_songs = len_songs, results = results)
+            return render_template('results.html', results = results)
         else:
             return render_template('error.html')
     else:
@@ -170,6 +200,7 @@ def create_album():
         durations = durations.splitlines()
         cursor = db.connection.cursor()
         files = request.files.getlist('album__art')
+        # !-----------
         image_file = []
         for file in files:
             if file:
@@ -177,9 +208,12 @@ def create_album():
                 file.save(os.path.join(app.config['ALBUM_ART_FOLDER'], filename))
                 image_file.append(file)
         album_art = image_file[0]
+        # !-----------
         user_id = session['user_id']
         # !---- ALBUM_ID, ALBUM_NAME, YEAR, USER_ID. GENRE, IMAGE
-        cursor.execute("INSERT INTO ALBUM VALUES (%s, %s, %s, %s, %s, %s)", (auto, album_name, album_year, user_id, genre, album_art))
+        insertQuery = '''INSERT INTO ALBUM VALUES (%s, %s, %s, %s, %s, %s)'''
+        insertValues = (auto, album_name, album_year, user_id, genre, album_art)
+        cursor.execute(insertQuery, insertValues)
         getLatestAlbumIdQuery = '''SELECT ALBUM_ID FROM ALBUM WHERE ALBUM_ID = (SELECT MAX(ALBUM_ID) FROM ALBUM)'''
         cursor.execute(getLatestAlbumIdQuery)
         album_id = cursor.fetchone()
