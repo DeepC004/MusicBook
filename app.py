@@ -1,9 +1,12 @@
 import datetime
+import time
+import os
 from enum import auto
 from flask import Flask, flash, redirect, render_template, request, session
 from flask.templating import render_template
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from helper import apology, login_required
 from tempfile import mkdtemp
  
@@ -18,6 +21,8 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 # Configure session to use filesystem (instead of signed cookies)
+ALBUM_ART_FOLDER = 'static/images/album'
+app.config["ALBUM_ART_FOLDER"] = ALBUM_ART_FOLDER
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -30,10 +35,34 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
  
 db = MySQL(app)
  
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 @login_required
 def index():
-    return render_template('home.html')
+    if request.method == "POST":
+        if request.form.get("search"):        
+            cursor = db.connection.cursor()
+            test_search = request.form.get("search")
+            print(test_search)
+            search = "%" + request.form.get("search") + "%"
+            getAlbumQuery = '''SELECT * FROM album WHERE album_name LIKE %s'''
+            cursor.execute(getAlbumQuery, [search])
+            albums = cursor.fetchall()
+            len_albums = len(albums)
+            getUserQuery = '''SELECT * FROM user WHERE name LIKE %s'''
+            cursor.execute(getUserQuery, [search])
+            artists = cursor.fetchall()
+            len_artists = len(artists)
+            getSongQuery = '''SELECT * FROM song WHERE song_name LIKE %s'''
+            cursor.execute(getSongQuery, [search])
+            songs = cursor.fetchall()
+            len_songs=len(songs)
+            db.connection.commit()
+            cursor.close()
+            return render_template('results.html', albums = albums, artists = artists, songs = songs, len_albums = len_albums, len_artists = len_artists, len_songs = len_songs)
+        else:
+            return render_template('error.html')
+    else:
+        return render_template('home.html')
  
  
 @app.route("/login", methods=["GET", "POST"])
@@ -71,8 +100,22 @@ def login():
 @app.route('/registration')
 def registration():
     return render_template('registration.html')
+
+@app.route('/user')
+@login_required
+def user():
+    userID = session['user_id']
+    print(userID)
+    cursor = db.connection.cursor()
+    cursor.execute('SELECT * FROM user WHERE USER_ID = %s', [userID])
+    userDetails = cursor.fetchall()
+    userDetails = userDetails[0]
+    # print(userDetails)
+    db.connection.commit()
+    cursor.close()
+    return render_template('user.html', user = userDetails)
  
- 
+
 @app.route('/register_user', methods=['POST', 'GET'])
 def register_user():
     if request.method == 'POST':
@@ -81,18 +124,22 @@ def register_user():
         email = request.form.get('email')
         password = request.form.get('password')
         hashed_password = generate_password_hash(password)
-        print(name)
-        print(phone)
-        print(email)
-        print(password)
-        print(hashed_password)
-        # TODO: write logic for updating user DB with user details
         cursor = db.connection.cursor()
+        cursor.execute("SELECT * FROM user WHERE email = %s", email)
+        duplicates = cursor.fetchall()
+        if(len(duplicates) != 0):
+            db.connection.commit()
+            cursor.close()
+            flash(u'User already exists', 'error')
+            time.sleep(3)
+            return redirect(request.url)
         cursor.execute('''INSERT INTO USER VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''', (auto, name, email, hashed_password, phone, 0, 0, None))
         db.connection.commit()
         cursor.close()
     else:
-        return render_template('error.html')
+        return render_template('error.html', message = 'Unknown error occurred')
+    flash('Registration successful!')
+    time.sleep(3) 
     return render_template('login.html')
  
 @app.route("/logout")
@@ -110,28 +157,42 @@ def logout():
 def results():
     return render_template('results.html')
 
-@app.route('/create_album')
+@app.route('/create_album', methods=['POST', 'GET'])
+@login_required
 def create_album():
-    return render_template('create_album.html')
- 
-@app.route('/new_album', methods=['POST', 'GET'])
-def new_album():
-    if request.method == 'POST':
+    if request.method=='POST':
         songs = request.form["song__name"]
-        album = request.form["album__name"]
+        album_name = request.form["album__name"]
         genre = request.form["album__genre"]
         durations = request.form["song__durations"]
-        year = datetime.date.today().strftime("%Y")
+        album_year = datetime.date.today().strftime("%Y")
         songs = songs.splitlines()
         durations = durations.splitlines()
-        print(songs)
-        print(album)
-        print(genre)
-        print(durations)
-        print(year)
+        cursor = db.connection.cursor()
+        files = request.files.getlist('album__art')
+        image_file = []
+        for file in files:
+            if file:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['ALBUM_ART_FOLDER'], filename))
+                image_file.append(file)
+        album_art = image_file[0]
+        user_id = session['user_id']
+        # !---- ALBUM_ID, ALBUM_NAME, YEAR, USER_ID. GENRE, IMAGE
+        cursor.execute("INSERT INTO ALBUM VALUES (%s, %s, %s, %s, %s, %s)", (auto, album_name, album_year, user_id, genre, album_art))
+        getLatestAlbumIdQuery = '''SELECT ALBUM_ID FROM ALBUM WHERE ALBUM_ID = (SELECT MAX(ALBUM_ID) FROM ALBUM)'''
+        cursor.execute(getLatestAlbumIdQuery)
+        album_id = cursor.fetchone()
+        album_id = album_id['ALBUM_ID']
+        # !---- SONG_ID, ALBUM_ID, SONG_NAME, DURATION
+        for i in range(len(songs)):
+            cursor.execute("INSERT INTO song VALUES (%s, %s, %s, %s)", (auto, album_id, songs[i], durations[i]))
+        # !-----------------
+        db.connection.commit()
+        cursor.close()
+        return redirect('/user')
     else:
-        return render_template('error.html')
-    return redirect('/')
+        return render_template('create_album.html')
 
 # class USERS(db.Model):
 #     user_id = db.Column(db.Integer, primary_key = True)
