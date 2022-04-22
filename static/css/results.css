@@ -40,3 +40,19 @@ img {
 	width: 50px;
 	background-color: #000;
 }
+
+.fa-heart {
+	font-size: 1.35rem;
+	color: #48cae4;
+	transition: tranform 200ms ease-out;
+}
+
+.fa-heart:hover {
+	opacity: 0.7;
+	transform: scale(1.2);
+}
+
+.add_button {
+	border: none;
+	background-color: #fff;
+}
