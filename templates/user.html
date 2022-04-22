@@ -40,62 +40,15 @@ block head %}
 		</div>
 		<div class="show_playlists scroll">
 			<ul class="list">
+				{% for playlist in playlists %}
 				<li class="item_style">
-					<div class="list_image">Image here</div>
+					<div class="list_image"><img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo"></div>
 					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
+						<p>{{ playlist.PLAYLIST_NAME }}</p>
+						<p>{{ playlist.PLAYLIST_YEAR }}</p>
 					</div>
 				</li>
-				<li class="item_style">
-					<div class="list_image">Image here</div>
-					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
-					</div>
-				</li>
-				<li class="item_style">
-					<div class="list_image">Image here</div>
-					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
-					</div>
-				</li>
-				<li class="item_style">
-					<div class="list_image">Image here</div>
-					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
-					</div>
-				</li>
-				<li class="item_style">
-					<div class="list_image">Image here</div>
-					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
-					</div>
-				</li>
-				<li class="item_style">
-					<div class="list_image">Image here</div>
-					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
-					</div>
-				</li>
-				<li class="item_style">
-					<div class="list_image">Image here</div>
-					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
-					</div>
-				</li>
-				<li class="item_style">
-					<div class="list_image">Image here</div>
-					<div class="list_data">
-						<p>Song name</p>
-						<p>Duration</p>
-					</div>
-				</li>
+				{% endfor %}
 			</ul>
 		</div>
 	</div>
