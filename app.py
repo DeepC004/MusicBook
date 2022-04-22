@@ -3,7 +3,7 @@ import time
 import os
 import base64
 from enum import auto
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, g
 from flask.helpers import url_for
 from flask.templating import render_template
 from flask_mysqldb import MySQL
@@ -38,10 +38,11 @@ app.config['MYSQL_DB'] = 'dbms_proj'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
  
 db = MySQL(app)
- 
+
 @app.route('/', methods=["GET", "POST"])
 @login_required
 def index():
+    g.current_user_id = session['user_id']
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM USER ORDER BY FOLLOWERS DESC LIMIT 5")
     users = cursor.fetchall()
@@ -129,6 +130,8 @@ def login():
         session["user_id"] = rows[0]["USER_ID"]
         db.connection.commit()
         cursor.close()
+        g.current_user_id = session['user_id']
+
         # Redirect user to home page
         return redirect("/")
  
@@ -141,10 +144,16 @@ def login():
 def registration():
     return render_template('registration.html')
 
-@app.route('/user')
+@app.route('/user', defaults={'user_id': None})
+@app.route('/user/<user_id>')
 @login_required
-def user():
-    userID = session['user_id']
+def user(user_id):
+# def user():
+    g.current_user_id = session['user_id']
+    # userID = session['user_id']
+    if user_id is None:
+        user_id = session['user_id']
+    userID = user_id
     print(userID)
     cursor = db.connection.cursor()
     cursor.execute('SELECT * FROM user WHERE USER_ID = %s', [userID])
@@ -195,11 +204,13 @@ def logout():
  
 @app.route('/results')
 def results():
+    g.current_user_id = session['user_id']
     return render_template('results.html')
 
 @app.route('/create_album', methods=['POST', 'GET'])
 @login_required
 def create_album():
+    g.current_user_id = session['user_id']
     if request.method=='POST':
         songs = request.form["song__name"]
         album_name = request.form["album__name"]
@@ -241,6 +252,7 @@ def create_album():
 
 @app.route('/create_playlist')
 def create_playlist():
+    g.current_user_id = session['user_id']
     return render_template('create_playlist.html')
 # class USERS(db.Model):
 #     user_id = db.Column(db.Integer, primary_key = True)
