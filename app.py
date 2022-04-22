@@ -25,8 +25,14 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 # Configure session to use filesystem (instead of signed cookies)
+
 ALBUM_ART_FOLDER = 'static/images/album'
 app.config["ALBUM_ART_FOLDER"] = ALBUM_ART_FOLDER
+
+PLAYLIST_ART_FOLDER = 'static/images/playlist'
+app.config["PLAYLIST_ART_FOLDER"] = PLAYLIST_ART_FOLDER
+
+
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -77,7 +83,7 @@ def index():
             album_list = []
             for i in range(len_songs):
                 album_list.append(albums[i])
-            joinTablesQuery = '''SELECT S.SONG_NAME song, A.ALBUM_NAME album, A.ALBUM_PHOTO album_art, U.NAME user FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
+            joinTablesQuery = '''SELECT S.SONG_NAME song, A.ALBUM_NAME album, A.ALBUM_PHOTO album_art, U.NAME user, U.USER_ID id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
             cursor.execute(joinTablesQuery, [search, search, search])
             jointQuery = cursor.fetchall()
             print('\n\nJOINT TABLE QUERY: \n', jointQuery)
@@ -102,7 +108,7 @@ def index():
         else:
             return render_template('error.html')
     else:
-        return render_template('home.html',top_artists=top_artists)
+        return render_template('home.html', top_artists = top_artists)
 
  
  
@@ -148,9 +154,7 @@ def registration():
 @app.route('/user/<user_id>')
 @login_required
 def user(user_id):
-# def user():
     g.current_user_id = session['user_id']
-    # userID = session['user_id']
     if user_id is None:
         user_id = session['user_id']
     userID = user_id
@@ -249,11 +253,39 @@ def create_album():
     else:
         return render_template('create_album.html')
 
+@app.route('/playlist')
+def playlist():
+    return render_template('playlist.html')
 
-@app.route('/create_playlist')
+@app.route('/create_playlist', methods=['POST', 'GET'])
 def create_playlist():
     g.current_user_id = session['user_id']
+    if request.method=='POST':
+        playlist_name = request.form["playlist__name"]
+        playlist_year = datetime.date.today().strftime("%Y")
+        cursor = db.connection.cursor()
+        files = request.files.getlist('playlist__art')
+        # !-----------
+        image_file = []
+        for file in files:
+            if file:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['PLAYLIST_ART_FOLDER'], filename))
+                image_file.append(file)
+        playlist_art = image_file[0]
+        # !-----------
+        user_id = session['user_id']
+        # !--- Playlist ID, Playlist Name, Playlist Year, User ID, Playlist_Photo
+        insertQuery = '''INSERT INTO PLAYLIST VALUES (%s, %s, %s, %s, %s)'''
+        insertValues = (auto, playlist_name, playlist_year, user_id, playlist_art)
+        cursor.execute(insertQuery, insertValues)
+        db.connection.commit()
+        cursor.close()
+        return redirect('/user')
     return render_template('create_playlist.html')
+
+
+
 # class USERS(db.Model):
 #     user_id = db.Column(db.Integer, primary_key = True)
  
