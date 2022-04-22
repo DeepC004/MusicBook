@@ -7,13 +7,13 @@ block head %}
 
 {% endblock %} {% block body %}
 <div class="wrapper">
-	<form action="/new_album" method="POST">
+	<form action="/create_album" method="POST" enctype="multipart/form-data">
 		<div class="container">
 			<div class="album__art">
 				<label for="album__art" class="plus__button"
 					><i class="fa-solid fa-plus"></i
 				></label>
-				<input type="file" name="album__art" id="album__art" required />
+				<input type="file" accept="image/jpeg" name="album__art" id="album__art" required />
 			</div>
 			<div class="album__details">
 				<div class="add__song">
