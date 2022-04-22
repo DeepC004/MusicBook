@@ -15,16 +15,21 @@
 		{% if results %}
 			{% for result in results %}
 				<div class="results">
-					<div class="result">
-						<div class="album__art"><img src="{{ result.album_art }}" alt=""></div>
-						<div class="song__name">{{ result.song }}</div>
-						<div class="artist__name">
-							<a href="#">
-								{{ result.user }}
-							</a>
+					<form action="/add_to_playlist" method="POST">
+						<div class="result">
+							<div class="album__art"><img src="{{ result.album_art }}" alt=""></div>
+							<div class="song__name">{{ result.song }}</div>
+							<div class="artist__name">
+								<a href="{{ url_for('user', user_id=result.id ) }}">
+									{{ result.user }}
+								</a>
+							</div>
+							<div class="album__name">{{ result.album }}</div>
+							<div class="add_to_playlist">
+								<button class="add_button" value=""><i class="fa-solid fa-heart"></i></button>
+							</div>
 						</div>
-						<div class="album__name">{{ result.album }}</div>
-					</div>
+					</form>
 				</div>
 			{% endfor %}
 		{% else %}
