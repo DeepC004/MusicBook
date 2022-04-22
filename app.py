@@ -163,10 +163,32 @@ def user(user_id):
     cursor.execute('SELECT * FROM user WHERE USER_ID = %s', [userID])
     userDetails = cursor.fetchall()
     userDetails = userDetails[0]
-    # print(userDetails)
+    searchQuery = '''SELECT * FROM PLAYLIST WHERE USER_ID = %s'''
+    cursor.execute(searchQuery, [userID])
+    playlists = cursor.fetchall()
+    print(playlists)
+    results = []
+    for i in range(len(playlists)):
+        results.append(playlists[i])
+    print('RESULTS:\n\n', results)
+    for i in range(len(playlists)):
+        imageFile = results[i]['PLAYLIST_PHOTO'].decode('UTF-8')
+        fileName = imageFile.split(' ')
+        filename = fileName[1]
+        fileName = 'images/playlist/' + filename.strip("'")
+        imageInfo = url_for('static', filename = fileName)
+        results[i]['PLAYLIST_PHOTO'] = imageInfo
+    print(results)
+    # *-------------- SONGS QUERY -----------------------
+    songsQuery = '''SELECT COUNT(*) song_count FROM SONG S INNER JOIN ALBUM A ON A.ALBUM_ID = S.ALBUM_ID INNER JOIN USER U ON A.USER_ID = U.USER_ID WHERE U.USER_ID = %s'''
+    cursor.execute(songsQuery, [userID])
+    songs = cursor.fetchall()
+    print(songs)
+    print(songs[0]['song_count'])
+    # song_count = songs[0]['song_count']
     db.connection.commit()
     cursor.close()
-    return render_template('user.html', user = userDetails)
+    return render_template('user.html', user = userDetails, playlists = results, song_count = songs[0]['song_count'])
  
 
 @app.route('/register_user', methods=['POST', 'GET'])
@@ -283,11 +305,6 @@ def create_playlist():
         cursor.close()
         return redirect('/user')
     return render_template('create_playlist.html')
-
-
-
-# class USERS(db.Model):
-#     user_id = db.Column(db.Integer, primary_key = True)
  
  
 if __name__ == "__main__":
