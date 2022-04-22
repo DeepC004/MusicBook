@@ -42,6 +42,15 @@ db = MySQL(app)
 @app.route('/', methods=["GET", "POST"])
 @login_required
 def index():
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT * FROM USER ORDER BY FOLLOWERS DESC LIMIT 5")
+    users = cursor.fetchall()
+    top_artists = []
+    for user in users:
+        top_artists.append(user)
+    print(top_artists)
+    db.connection.commit()
+    cursor.close()
     if request.method == "POST":
         if request.form.get("search"):        
             cursor = db.connection.cursor()
@@ -92,7 +101,8 @@ def index():
         else:
             return render_template('error.html')
     else:
-        return render_template('home.html')
+        return render_template('home.html',top_artists=top_artists)
+
  
  
 @app.route("/login", methods=["GET", "POST"])
@@ -228,6 +238,10 @@ def create_album():
     else:
         return render_template('create_album.html')
 
+
+@app.route('/create_playlist')
+def create_playlist():
+    return render_template('create_playlist.html')
 # class USERS(db.Model):
 #     user_id = db.Column(db.Integer, primary_key = True)
  
