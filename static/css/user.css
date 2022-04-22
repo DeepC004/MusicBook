@@ -3,7 +3,12 @@ html {
     padding: 0;
     margin: 0;
 }
- 
+
+/* a {
+    text-decoration: none;
+    color: #FFF;
+} */
+
 .user_details {
     background-color: black;
     padding: 20px;
@@ -20,8 +25,15 @@ html {
     width: 100px;
     height: 100px;
     background-color: grey;
-    padding-left: 10px;
+    /* padding-left: 10px; */
     margin-left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.show_image .fa-user {
+    font-size: 65px;
 }
  
 .show_details {
@@ -129,6 +141,10 @@ html {
     transform: scale(1.05);
     background-color: rgb(23, 226, 216);
 }
+
+.list li:hover {
+    cursor:  pointer;
+}
  
 .list_data {
     width: 40vw;
@@ -152,6 +168,5 @@ html {
 }
  
 .item_style:hover .list_data {
-    cursor: pointer;
     background-color: rgb(23, 226, 216);
 }
