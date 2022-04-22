@@ -96,7 +96,7 @@ img {
 	padding: 10px;
 	margin-right: 30px;
 	background-color: black;
-    overflow: visible;
+	overflow: visible;
 }
 
 .scroll {
@@ -177,4 +177,20 @@ li {
 .item_style:hover {
 	transform: scale(1.05);
 	background-color: rgb(23, 226, 216);
+}
+
+.fa-music {
+	color: #fff;
+}
+
+.message {
+	font-size: 1.7rem;
+}
+
+.display_text {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
 }
