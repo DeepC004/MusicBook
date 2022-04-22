@@ -16,8 +16,8 @@ block head %}
 		{% endif %}
 		<div class="show_details">
 			<div class="songs_count">
-				<p>Songs: #count</p>
-				<p>Playlists: #count</p>
+				<p>Songs: {{ song_count }}</p>
+				<p>Playlists: {{ playlists | length }}</p>
 			</div>
 			<div class="followers_count">
 				<p>Followers: {{ user.FOLLOWERS }}</p>
