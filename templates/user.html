@@ -39,17 +39,23 @@ block head %}
 			</a>
 		</div>
 		<div class="show_playlists scroll">
-			<ul class="list">
-				{% for playlist in playlists %}
-				<li class="item_style">
-					<div class="list_image"><img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo"></div>
-					<div class="list_data">
-						<p>{{ playlist.PLAYLIST_NAME }}</p>
-						<p>{{ playlist.PLAYLIST_YEAR }}</p>
-					</div>
-				</li>
-				{% endfor %}
-			</ul>
+			{% if playlists | length < 1 %}
+			<div class="display_text">
+				<p class="message">No user music yet <i class="fa-solid fa-music"></i></p>
+			</div>
+			{% else %}
+				<ul class="list">
+					{% for playlist in playlists %}
+					<li class="item_style">
+						<div class="list_image"><img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo"></div>
+						<div class="list_data">
+							<p>{{ playlist.PLAYLIST_NAME }}</p>
+							<p>{{ playlist.PLAYLIST_YEAR }}</p>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
 		</div>
 	</div>
 </div>
