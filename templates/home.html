@@ -1,19 +1,62 @@
-{% extends "app_layout.html" %} 
+{% extends "app_layout.html" %} {% block title %} Home {% endblock %} {% block
+head %}
+<link rel="stylesheet" href="../static/css/home.css" />
 
-{% block title %} Home {% endblock %} 
-
-{% block head %} 
-<link rel="stylesheet" href="../static/css/home.css" /> 
-{% endblock %} 
-
-{% block page_title %} 
-
-    <h1>Home</h1>
-
-{% endblock %}
-
-
-{% block body %} 
-
-
+{% endblock %} {% block page_title %}
+<h1>Home</h1>
+{% endblock %} {% block body %}
+<div class="home">
+	<div class="upper">
+		<div class="upper_title">
+			<h3>Top Artists</h3>
+		</div>
+		<div class="upper_content">
+			{% if top_artists %}
+			<ul class="organise">
+				{% for top_artist in top_artists %}
+				<li class="list_item">
+					<a href="{{ url_for('user', user_id=top_artist.USER_ID ) }}">
+						<div class="artist_info">
+							<div class="artist_image">
+								<img src="{{ top_artist.USER_PHOTO }}" alt="" />
+							</div>
+							<div class="artist_name">{{ top_artist.NAME }}</div>
+						</div>
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<h1>No top artists yet</h1>
+			{% endif %}
+		</div>
+	</div>
+	<div class="lower">
+		<div class="lower_title">
+			<h3>Quick Access</h3>
+		</div>
+		<div class="lower_content">
+			<div class="liked_songs lower_size">
+				<div class="lower_image">Image here</div>
+				<div class="lower_text">
+					<p class="for_center">Liked Songs</p>
+					<p>#number songs</p>
+				</div>
+			</div>
+			<a href="/top_songs">
+				<div class="top_songs lower_size">
+					<div class="lower_image">Image here</div>
+					<div class="lower_text_more">Top Songs</div>
+				</div>
+			</a>
+			<div class="quick_playlists lower_size">
+				<div class="lower_image">Image here</div>
+				<div class="lower_text">
+					<p class="for_center">Playlist</p>
+					<p>#number playlists</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}
