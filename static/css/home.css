@@ -1,6 +1,107 @@
+body a {
+	text-decoration: none;
+	color: white;
+}
+
+body a:hover {
+	color: aqua;
+}
+
 .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* height: 100vh; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* height: 100vh; */
+}
+
+.upper {
+	background-color: black;
+	padding-bottom: 1vh;
+	margin-bottom: 1vh;
+}
+
+.upper_title {
+	padding-left: 10vw;
+	padding-bottom: 3.5vh;
+}
+
+.organise {
+	display: flex;
+	justify-content: space-evenly;
+	list-style: none;
+	background-color: black;
+	margin: none;
+	padding: none;
+}
+
+.artist_info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.artist_image {
+	height: 170px;
+	width: 150px;
+	border-radius: 5px;
+	background-color: grey;
+}
+
+.lower {
+	margin-top: 5vh;
+}
+
+.lower_title {
+	padding-left: 10vw;
+	padding-bottom: 4vh;
+}
+
+.lower_content {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.lower_size {
+	background-color: grey;
+	display: flex;
+	width: 250px;
+	height: 120px;
+	border-radius: 5px;
+}
+
+.lower_image {
+	border-radius: 5px 0 0 5px;
+	width: 125px;
+	background-color: grey;
+}
+
+.lower_text {
+	border-radius: 0 5px 5px 0;
+	height: 120px;
+	width: 125px;
+	background-color: rgb(224, 224, 224);
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+}
+
+.lower_text_more {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0 5px 5px 0;
+	color: black;
+	width: 125px;
+	height: 120px;
+	background-color: rgb(224, 224, 224);
+}
+
+.lower_text p {
+	color: black;
+	margin: 0;
+}
+
+.for_center {
+	padding-top: 3.7vh;
 }
