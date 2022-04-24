@@ -244,9 +244,16 @@ def register_user():
             db.connection.commit()
             cursor.close()
             flash(u'User already exists', 'error')
-            time.sleep(3)
             return redirect(request.url)
-        cursor.execute('''INSERT INTO USER VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''', (auto, name, email, hashed_password, phone, 0, 0, None))
+        insertQuery = '''INSERT INTO USER VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'''
+        insertValues = (auto, name, email, hashed_password, phone, 0, 0, None)
+        cursor.execute(insertQuery, insertValues)
+        # id, name, year, user_id, photo
+        year = datetime.date.today().strftime("%Y")
+        defaultPlaylistQuery = '''INSERT INTO PLAYLIST VALUES (%s, %s, %s, %s, %s)'''
+        new_user_id = cursor.lastrowid
+        playlistValues = (auto, 'Liked Songs', year, new_user_id, None)
+        cursor.execute(defaultPlaylistQuery, playlistValues)
         db.connection.commit()
         cursor.close()
     else:
