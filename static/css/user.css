@@ -23,11 +23,11 @@ img {
 }
 
 .show_image {
-	width: 100px;
-	height: 100px;
+	width: 120px;
+	height: 120px;
 	background-color: grey;
 	/* padding-left: 10px; */
-	margin-left: 30px;
+	/* margin-left: 30px; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -41,11 +41,13 @@ img {
 	background-color: black;
 	padding: 6px 4px;
 	width: 60vw;
-	height: 14vh;
+	/* height: 14vh; */
+	height: inherit;
 	margin-right: 100px;
 	margin-left: 10px;
 	display: flex;
 	justify-content: space-evenly;
+	font-size: 1.2rem;
 }
 
 .songs_count {
@@ -140,11 +142,6 @@ img {
 	transition: all 0.15s ease-in-out;
 }
 
-/* .item_style:hover {
-    /* transform: scale(1.05);
-    background-color: rgb(23, 226, 216);
-} */
-
 .list li:hover {
 	cursor: pointer;
 }
@@ -204,9 +201,9 @@ li {
 }
 
 .follow-btn {
-	color: #FFF;
+	color: #fff;
 	background-color: #000;
-	border: #FFF 1px solid;
+	border: #fff 1px solid;
 	transition: transform 200ms ease-in-out;
 }
 
@@ -215,10 +212,39 @@ li {
 }
 
 .follow-btn:hover {
-	color: #FFF;
+	color: #fff;
 	transform: scale(1.2);
 }
 
-#follower, #following {
+#follower,
+#following {
 	display: none;
+}
+
+.upload-btn, .image_and_btn {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-left: 10px;
+}
+
+#upload_label, .submit-btn {
+	border: 1px solid #FFF;
+	border-radius: 5px;
+	padding: 0.5em;
+	width: 120px;
+	margin-top: 0.5em;
+	text-align: center;
+}
+
+.user_photo {
+	display: none;
+}
+
+.profile_picture {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
