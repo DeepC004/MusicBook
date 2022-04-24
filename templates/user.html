@@ -1,10 +1,8 @@
-{% extends "app_layout.html" %} {% block title %} User Library {% endblock %} {%
-block head %}
+{% extends "app_layout.html" %} {% block title %} {{ user.NAME }} {% endblock %}
+{% block head %}
 <link rel="stylesheet" href="../static/css/user.css" />
 {% endblock %} {% block page_title %}
-
-<h1>{{ user.NAME }}</h1>
-
+<h1 id="active_user">{{ user.NAME }}</h1>
 {% endblock %} {% block body %}
 <div class="wrapper">
 	<div class="user_details">
@@ -23,9 +21,19 @@ block head %}
 				<p>Followers: {{ user.FOLLOWERS }}</p>
 				<p>Following: {{ user.FOLLOWING }}</p>
 			</div>
+			{% if current_user_id != user.USER_ID %}
+			<div class="follow_button">
+				<form action="/follow_request" method="POST" id="follow_form">
+					<input type="text" name="follower" id="follower" value="{{ current_user_id }}" />
+					<input type="text" name="following" id="following" value="{{ user.USER_ID }}" />
+					<button class="btn follow-btn" id="follow_btn" type="submit">Follow</button>
+				</form>
+			</div>
+			{% endif %}
 		</div>
 	</div>
 	<div class="bottom_half">
+		{% if current_user_id == user.USER_ID %}
 		<div class="release">
 			<a href="{{ url_for('create_album') }}">
 				<div class="release_album button btn btn-secondary" type="button">
@@ -38,26 +46,31 @@ block head %}
 				</div>
 			</a>
 		</div>
+		{% endif %}
 		<div class="show_playlists scroll">
 			{% if playlists | length < 1 %}
 			<div class="display_text">
-				<p class="message">No user music yet <i class="fa-solid fa-music"></i></p>
+				<p class="message">
+					No user music yet <i class="fa-solid fa-music"></i>
+				</p>
 			</div>
 			{% else %}
-				<ul class="list">
-					{% for playlist in playlists %}
-					<li class="item_style">
-						<div class="list_image"><img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo"></div>
-						<div class="list_data">
-							<p>{{ playlist.PLAYLIST_NAME }}</p>
-							<p>{{ playlist.PLAYLIST_YEAR }}</p>
-						</div>
-					</li>
-					{% endfor %}
-				</ul>
+			<ul class="list">
+				{% for playlist in playlists %}
+				<li class="item_style">
+					<div class="list_image">
+						<img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo" />
+					</div>
+					<div class="list_data">
+						<p>{{ playlist.PLAYLIST_NAME }}</p>
+						<p>{{ playlist.PLAYLIST_YEAR }}</p>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
 			{% endif %}
 		</div>
 	</div>
 </div>
-
+<script src="/static/js/user.js"></script>
 {% endblock %}
