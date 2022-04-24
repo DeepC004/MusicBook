@@ -32,6 +32,8 @@ app.config["ALBUM_ART_FOLDER"] = ALBUM_ART_FOLDER
 PLAYLIST_ART_FOLDER = 'static/images/playlist'
 app.config["PLAYLIST_ART_FOLDER"] = PLAYLIST_ART_FOLDER
 
+USER_PHOTO_FOLDER = 'static/images/user'
+app.config["USER_PHOTO_FOLDER"] = USER_PHOTO_FOLDER
 
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -160,9 +162,11 @@ def user(user_id):
     userID = user_id
     # print(userID)
     cursor = db.connection.cursor()
-    cursor.execute('SELECT * FROM user WHERE USER_ID = %s', [userID])
+    cursor.execute('SELECT * FROM USER WHERE USER_ID = %s', [userID])
     userDetails = cursor.fetchall()
+    # print(userDetails)
     userDetails = userDetails[0]
+    print('\n\nUser Details: ', userDetails)
     searchQuery = '''SELECT * FROM PLAYLIST WHERE USER_ID = %s'''
     cursor.execute(searchQuery, [userID])
     playlists = cursor.fetchall()
@@ -170,7 +174,7 @@ def user(user_id):
     results = []
     for i in range(len(playlists)):
         results.append(playlists[i])
-    print('RESULTS:\n\n', results)
+    print('\n\nRESULTS: ', results)
     for i in range(len(playlists)):
         imageFile = results[i]['PLAYLIST_PHOTO'].decode('UTF-8')
         fileName = imageFile.split(' ')
@@ -178,7 +182,19 @@ def user(user_id):
         fileName = 'images/playlist/' + filename.strip("'")
         imageInfo = url_for('static', filename = fileName)
         results[i]['PLAYLIST_PHOTO'] = imageInfo
-    # print(results)
+    userResults = []
+    userResults.append(userDetails)
+    print('USER RESULTS:\n\n', userResults)
+    if (userResults[0]['USER_PHOTO'] is not None):
+        for i in range(len(userResults)):
+            imageFile = userResults[i]['USER_PHOTO'].decode('UTF-8')
+            fileName = imageFile.split(' ')
+            filename = fileName[1]
+            fileName = 'images/user/' + filename.strip("'")
+            imageInfo = url_for('static', filename = fileName)
+            userResults[i]['USER_PHOTO'] = imageInfo
+    userResults = userResults[0]
+    print('\n\nUser Results: ', userResults)
     # *-------------- SONGS QUERY -----------------------
     songsQuery = '''SELECT COUNT(*) song_count FROM SONG S INNER JOIN ALBUM A ON A.ALBUM_ID = S.ALBUM_ID INNER JOIN USER U ON A.USER_ID = U.USER_ID WHERE U.USER_ID = %s'''
     cursor.execute(songsQuery, [userID])
@@ -188,8 +204,29 @@ def user(user_id):
     # song_count = songs[0]['song_count']
     db.connection.commit()
     cursor.close()
-    return render_template('user.html', user = userDetails, playlists = results, song_count = songs[0]['song_count'], current_user_id = current_user_id)
+    return render_template('user.html', user = userResults, playlists = results, song_count = songs[0]['song_count'], current_user_id = current_user_id)
  
+@app.route('/upload_profile_photo', methods=['POST', 'GET'])
+def upload_profile_photo():
+    if request.method == 'POST':
+        cursor = db.connection.cursor()
+        files = request.files.getlist('user_photo')
+        image_file = []
+        for file in files:
+            if file:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['USER_PHOTO_FOLDER'], filename))
+                image_file.append(file)
+        user_photo = image_file[0]
+        print('\n\nUser photo: \n\n', user_photo)
+        user_id = session['user_id']
+        updateQuery = '''UPDATE USER SET USER_PHOTO = %s WHERE USER_ID = %s'''
+        insertValues = (user_photo, user_id)
+        cursor.execute(updateQuery, insertValues)
+        db.connection.commit()
+        cursor.close()
+    return redirect('/user')
+
 @app.route('/follow_request', methods=['POST', 'GET'])
 def follow_request():
     if request.method == 'POST':
