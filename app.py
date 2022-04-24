@@ -154,11 +154,11 @@ def registration():
 @app.route('/user/<user_id>')
 @login_required
 def user(user_id):
-    g.current_user_id = session['user_id']
+    current_user_id = session['user_id']
     if user_id is None:
         user_id = session['user_id']
     userID = user_id
-    print(userID)
+    # print(userID)
     cursor = db.connection.cursor()
     cursor.execute('SELECT * FROM user WHERE USER_ID = %s', [userID])
     userDetails = cursor.fetchall()
@@ -166,7 +166,7 @@ def user(user_id):
     searchQuery = '''SELECT * FROM PLAYLIST WHERE USER_ID = %s'''
     cursor.execute(searchQuery, [userID])
     playlists = cursor.fetchall()
-    print(playlists)
+    # print(playlists)
     results = []
     for i in range(len(playlists)):
         results.append(playlists[i])
@@ -178,18 +178,56 @@ def user(user_id):
         fileName = 'images/playlist/' + filename.strip("'")
         imageInfo = url_for('static', filename = fileName)
         results[i]['PLAYLIST_PHOTO'] = imageInfo
-    print(results)
+    # print(results)
     # *-------------- SONGS QUERY -----------------------
     songsQuery = '''SELECT COUNT(*) song_count FROM SONG S INNER JOIN ALBUM A ON A.ALBUM_ID = S.ALBUM_ID INNER JOIN USER U ON A.USER_ID = U.USER_ID WHERE U.USER_ID = %s'''
     cursor.execute(songsQuery, [userID])
     songs = cursor.fetchall()
-    print(songs)
-    print(songs[0]['song_count'])
+    # print(songs)
+    # print(songs[0]['song_count'])
     # song_count = songs[0]['song_count']
     db.connection.commit()
     cursor.close()
-    return render_template('user.html', user = userDetails, playlists = results, song_count = songs[0]['song_count'])
+    return render_template('user.html', user = userDetails, playlists = results, song_count = songs[0]['song_count'], current_user_id = current_user_id)
  
+@app.route('/follow_request', methods=['POST', 'GET'])
+def follow_request():
+    if request.method == 'POST':
+        follower_id = request.form.get('follower_id')
+        following_id = request.form.get('following_id')
+        print('\n\nFollow Request: \n\n', follower_id, following_id)
+        # * ----- INSERTING  INTO DB -----
+        """
+        1) check if FOLLOWS playlist doesn't already contain the 
+            follower : following pair
+        2) If not => insert into DB
+        3) else => remove from db since user wants to unfollow
+        
+        """
+        insertValue = (follower_id, following_id)
+        checkQuery = '''SELECT * FROM FOLLOWS WHERE FOLLOWER_ID = %s AND FOLLOWING_ID = %s'''
+        cursor = db.connection.cursor()
+        cursor.execute(checkQuery, insertValue)
+        values = cursor.fetchall()
+        print(values)
+        print(len(values))
+        if (len(values) == 0):
+            insertQuery = '''INSERT INTO FOLLOWS VALUES (%s, %s)'''
+            cursor.execute(insertQuery, insertValue)
+            updateFollowerQuery = '''UPDATE USER SET FOLLOWERS = FOLLOWERS + 1 WHERE USER_ID = %s'''
+            updateFollowingQuery = '''UPDATE USER SET FOLLOWING = FOLLOWING + 1 WHERE USER_ID = %s'''
+            cursor.execute(updateFollowerQuery, (follower_id))
+            cursor.execute(updateFollowingQuery, (following_id))
+        else:
+            removeQuery = '''DELETE FROM FOLLOWS WHERE FOLLOWER_ID = %s AND FOLLOWING_ID = %s'''
+            cursor.execute(removeQuery, insertValue)
+            updateFollowerQuery = '''UPDATE USER SET FOLLOWERS = FOLLOWERS - 1 WHERE USER_ID = %s'''
+            updateFollowingQuery = '''UPDATE USER SET FOLLOWING = FOLLOWING - 1 WHERE USER_ID = %s'''
+            cursor.execute(updateFollowerQuery, (follower_id))
+            cursor.execute(updateFollowingQuery, (following_id))
+        db.connection.commit()
+        cursor.close()
+    return redirect(f'/user/{following_id}')
 
 @app.route('/register_user', methods=['POST', 'GET'])
 def register_user():
