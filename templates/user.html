@@ -7,10 +7,60 @@
 <div class="wrapper">
 	<div class="user_details">
 		{% if (user.USER_PHOTO) is not none %}
-		<div class="show_image">Image here</div>
+		<div class="image_and_btn">
+			<div class="show_image"><img src="{{ user.USER_PHOTO }}" alt="" /></div>
+			{% if current_user_id == user.USER_ID %}
+			<div class="upload_image_form">
+				<form
+					action="/upload_profile_photo"
+					method="POST"
+					enctype="multipart/form-data"
+					class="profile_picture"
+				>
+					<label id="upload_label" for="user_photo">
+						New image <i class="fa-solid fa-plus"></i>
+					</label>
+					<input
+						type="file"
+						accept="image/jpeg"
+						value=""
+						name="user_photo"
+						class="user_photo"
+						id="user_photo"
+						onchange="this.form.submit()"
+					/>
+				</form>
+			</div>
+			{% endif %}
+		</div>
 		{% else %}
-		<!-- <div class="show_image"><i class="fa-solid fa-xmark"></i></div> -->
-		<div class="show_image"><i class="fa-solid fa-user"></i></div>
+		<!-- if photo is NONE -->
+		<div class="upload-btn">
+			<div class="show_image"><i class="fa-solid fa-user"></i></div>
+			{% if current_user_id == user.USER_ID %}
+			<div class="upload_image_form">
+				<form
+					action="/upload_profile_photo"
+					method="POST"
+					enctype="multipart/form-data"
+					class="profile_picture"
+				>
+					<label id="upload_label" for="user_photo">
+						New image <i class="fa-solid fa-plus"></i>
+					</label>
+					<input
+						type="file"
+						accept="image/jpeg"
+						value=""
+						name="user_photo"
+						class="user_photo"
+						id="user_photo"
+						onchange="this.form.submit()"
+					/>
+				</form>
+			</div>
+			{% endif %}
+		</div>
 		{% endif %}
 		<div class="show_details">
 			<div class="songs_count">
@@ -24,9 +74,21 @@
 			{% if current_user_id != user.USER_ID %}
 			<div class="follow_button">
 				<form action="/follow_request" method="POST" id="follow_form">
-					<input type="text" name="follower" id="follower" value="{{ current_user_id }}" />
-					<input type="text" name="following" id="following" value="{{ user.USER_ID }}" />
-					<button class="btn follow-btn" id="follow_btn" type="submit">Follow</button>
+					<input
+						type="text"
+						name="follower"
+						id="follower"
+						value="{{ current_user_id }}"
+					/>
+					<input
+						type="text"
+						name="following"
+						id="following"
+						value="{{ user.USER_ID }}"
+					/>
+					<button class="btn follow-btn" id="follow_btn" type="submit">
+						Follow
+					</button>
 				</form>
 			</div>
 			{% endif %}
