@@ -301,6 +301,10 @@ def register_user():
     flash('Registration successful!')
     # time.sleep(3) 
     return render_template('login.html')
+
+@app.route('/top_songs')
+def topSongs():
+    return render_template('top_songs.html')
  
 @app.route("/logout")
 def logout():
