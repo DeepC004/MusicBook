@@ -13,9 +13,9 @@ $(document).on("submit", "#follow_form", function (e) {
 const follow_button = document.querySelector("#follow_btn");
 
 follow_button.addEventListener("click", function () {
-	if (follow_button.innerText === "Follow") {
-		follow_button.innerText = "Following";
+	if (follow_button.value === "Follow") {
+		follow_button.value = "Following";
 	} else {
-		follow_button.innerText = "Follow";
+		follow_button.value = "Follow";
 	}
 });
