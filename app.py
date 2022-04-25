@@ -100,7 +100,6 @@ def index():
                 fileName = 'images/album/' + filename.strip("'")
                 imageInfo = url_for('static', filename = fileName)
                 results[i]['album_art'] = imageInfo
-
             # print('Albums: ', albums)
             # print('Artists: ', artists)
             db.connection.commit()
@@ -202,9 +201,13 @@ def user(user_id):
     # print(songs)
     # print(songs[0]['song_count'])
     # song_count = songs[0]['song_count']
+    followQuery = '''SELECT * FROM FOLLOWS WHERE FOLLOWER_ID = %s AND FOLLOWING_ID = %s'''
+    followValues = (current_user_id, userID)
+    cursor.execute(followQuery, followValues)
+    follows = cursor.fetchall()
     db.connection.commit()
     cursor.close()
-    return render_template('user.html', user = userResults, playlists = results, song_count = songs[0]['song_count'], current_user_id = current_user_id)
+    return render_template('user.html', user = userResults, follows = follows, playlists = results, song_count = songs[0]['song_count'], current_user_id = current_user_id)
  
 @app.route('/upload_profile_photo', methods=['POST', 'GET'])
 def upload_profile_photo():
@@ -253,15 +256,15 @@ def follow_request():
             cursor.execute(insertQuery, insertValue)
             updateFollowerQuery = '''UPDATE USER SET FOLLOWERS = FOLLOWERS + 1 WHERE USER_ID = %s'''
             updateFollowingQuery = '''UPDATE USER SET FOLLOWING = FOLLOWING + 1 WHERE USER_ID = %s'''
-            cursor.execute(updateFollowerQuery, (follower_id))
-            cursor.execute(updateFollowingQuery, (following_id))
+            cursor.execute(updateFollowerQuery, (following_id))
+            cursor.execute(updateFollowingQuery, (follower_id))
         else:
             removeQuery = '''DELETE FROM FOLLOWS WHERE FOLLOWER_ID = %s AND FOLLOWING_ID = %s'''
             cursor.execute(removeQuery, insertValue)
             updateFollowerQuery = '''UPDATE USER SET FOLLOWERS = FOLLOWERS - 1 WHERE USER_ID = %s'''
             updateFollowingQuery = '''UPDATE USER SET FOLLOWING = FOLLOWING - 1 WHERE USER_ID = %s'''
-            cursor.execute(updateFollowerQuery, (follower_id))
-            cursor.execute(updateFollowingQuery, (following_id))
+            cursor.execute(updateFollowerQuery, (following_id))
+            cursor.execute(updateFollowingQuery, (follower_id))
         db.connection.commit()
         cursor.close()
     return redirect(f'/user/{following_id}')
@@ -296,7 +299,7 @@ def register_user():
     else:
         return render_template('error.html', message = 'Unknown error occurred')
     flash('Registration successful!')
-    time.sleep(3) 
+    # time.sleep(3) 
     return render_template('login.html')
  
 @app.route("/logout")
@@ -349,7 +352,8 @@ def create_album():
         album_id = album_id['ALBUM_ID']
         # !---- SONG_ID, ALBUM_ID, SONG_NAME, DURATION
         for i in range(len(songs)):
-            cursor.execute("INSERT INTO song VALUES (%s, %s, %s, %s)", (auto, album_id, songs[i], durations[i]))
+            if (songs[i] != '' and durations[i] != ''):
+                cursor.execute("INSERT INTO song VALUES (%s, %s, %s, %s)", (auto, album_id, songs[i], durations[i]))
         # !-----------------
         db.connection.commit()
         cursor.close()
