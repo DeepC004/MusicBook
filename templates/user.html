@@ -86,9 +86,11 @@
 						id="following"
 						value="{{ user.USER_ID }}"
 					/>
-					<button class="btn follow-btn" id="follow_btn" type="submit">
-						Follow
-					</button>
+					{% if follows | length == 0 %}
+					<input type="submit" class="btn follow-btn" id="follow_btn" value="Follow">
+					{% else %}
+					<input type="submit" class="btn follow-btn" id="follow_btn" value="Following">
+					{% endif %}
 				</form>
 			</div>
 			{% endif %}
