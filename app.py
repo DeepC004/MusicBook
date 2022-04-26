@@ -84,6 +84,33 @@ def index():
 
     print('\n\nLatest Albums: ', latestAlbums)
 
+    playlistQuery = '''SELECT * FROM PLAYLIST WHERE USER_ID = %s ORDER BY PLAYLIST_ID ASC LIMIT 3'''
+    playlistValues = [session['user_id']]
+    cursor.execute(playlistQuery, playlistValues)
+    quickAccess = cursor.fetchall()
+    print('\n\nQuick Access: ', quickAccess)
+
+    quick_access = []
+    for i in range(len(quickAccess)):
+        quick_access.append(quickAccess[i])
+    for i in range(len(quickAccess)):
+        if (quick_access[i]['PLAYLIST_PHOTO'] is not None):
+            imageFile = quick_access[i]['PLAYLIST_PHOTO'].decode('UTF-8')
+            fileName = imageFile.split(' ')
+            filename = fileName[1]
+            fileName = 'images/playlist/' + filename.strip("'")
+            imageInfo = url_for('static', filename = fileName)
+            quick_access[i]['PLAYLIST_PHOTO'] = imageInfo
+
+    print('\n\nquick acess modified: ', quick_access)
+
+
+    latestSongsQuery = '''SELECT S.SONG_NAME song_name, A.ALBUM_NAME album_name, A.ALBUM_ID album_id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID ORDER BY S.SONG_ID DESC LIMIT 7'''
+    cursor.execute(latestSongsQuery)
+    latestSongs = cursor.fetchall()
+    print('\n\nLatest Songs: ', latestSongs)
+
+
     db.connection.commit()
     cursor.close()
     if request.method == "POST":
@@ -134,7 +161,7 @@ def index():
         else:
             return render_template('error.html')
     else:
-        return render_template('home.html', top_artists = top_artists, latest_albums = latest_albums)
+        return render_template('home.html', top_artists = top_artists, quick_access = quick_access, latest_albums = latest_albums, latest_songs = latestSongs)
 
  
  
@@ -446,6 +473,7 @@ def playlist(playlist_id):
         defaultPlaylistQuery = '''SELECT PLAYLIST_ID FROM PLAYLIST WHERE USER_ID = %s AND PLAYLIST_NAME = %s'''
         cursor.execute(defaultPlaylistQuery, [user_id, 'Liked Songs'])
         playlist = cursor.fetchall()
+        print('\n\n PLAYLIST TESTING: ', playlist)
         # print(playlist[0]['PLAYLIST_ID'])
         playlist_id = playlist[0]['PLAYLIST_ID']
         # print(playlist_id)
