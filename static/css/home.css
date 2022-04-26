@@ -4,7 +4,7 @@ body a {
 }
 
 body a:hover {
-	color: aqua;
+	color: #48CAE4;
 }
 
 .container {
@@ -81,7 +81,23 @@ body a:hover {
 
 .lower_content {
 	display: flex;
-	justify-content: space-evenly;
+	overflow: hidden;
+	overflow-x: scroll;
+	margin-left: 98px;
+	margin-right: 98px;
+}
+
+.lower_content::-webkit-scrollbar {
+	display: none;
+}
+
+.album_container {
+	margin-left: 1.7em;
+}
+
+.album_container:hover, .lower_text:hover {
+	cursor: pointer;
+	background-color: #48CAE4;
 }
 
 .lower_size {
@@ -94,8 +110,16 @@ body a:hover {
 
 .lower_image {
 	border-radius: 5px 0 0 5px;
+	/* height: 125px; */
 	width: 125px;
 	background-color: grey;
+}
+
+#album_art {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	border-radius: 5px 0 0 5px;
 }
 
 .lower_text {
@@ -106,6 +130,10 @@ body a:hover {
 	align-items: center;
 	display: flex;
 	flex-direction: column;
+}
+
+#album_year {
+	padding-top: 1em;
 }
 
 .lower_text_more {

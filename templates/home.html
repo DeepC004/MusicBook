@@ -43,29 +43,63 @@ head %}
 	</div>
 	<div class="lower">
 		<div class="lower_title">
-			<h3>Quick Access</h3>
+			<h3>Latest Music</h3>
 		</div>
 		<div class="lower_content">
-			<div class="liked_songs lower_size">
-				<div class="lower_image">Image here</div>
-				<div class="lower_text">
-					<p class="for_center">Liked Songs</p>
-					<p>#number songs</p>
-				</div>
-			</div>
-			<a href="/top_songs">
-				<div class="top_songs lower_size">
-					<div class="lower_image">Image here</div>
-					<div class="lower_text_more">Top Songs</div>
+			{% for album in latest_albums %}
+
+			<a href="#">
+				<div class="liked_songs lower_size album_container">
+					<div class="lower_image">
+						<img
+							id="album_art"
+							src="{{ album.ALBUM_PHOTO }}"
+							alt="album photo"
+						/>
+					</div>
+					<div class="lower_text">
+						<p class="for_center">{{ album.ALBUM_NAME }}</p>
+						<p id="album_year">{{ album.ALBUM_YEAR }}</p>
+					</div>
 				</div>
 			</a>
-			<div class="quick_playlists lower_size">
-				<div class="lower_image">Image here</div>
-				<div class="lower_text">
-					<p class="for_center">Playlist</p>
-					<p>#number playlists</p>
+			{% endfor %}
+			{% for album in latest_albums %}
+
+			<a href="#">
+				<div class="liked_songs lower_size album_container">
+					<div class="lower_image">
+						<img
+							id="album_art"
+							src="{{ album.ALBUM_PHOTO }}"
+							alt="album photo"
+						/>
+					</div>
+					<div class="lower_text">
+						<p class="for_center">{{ album.ALBUM_NAME }}</p>
+						<p id="album_year">{{ album.ALBUM_YEAR }}</p>
+					</div>
 				</div>
-			</div>
+			</a>
+			{% endfor %}
+			{% for album in latest_albums %}
+
+			<a href="#">
+				<div class="liked_songs lower_size album_container">
+					<div class="lower_image">
+						<img
+							id="album_art"
+							src="{{ album.ALBUM_PHOTO }}"
+							alt="album photo"
+						/>
+					</div>
+					<div class="lower_text">
+						<p class="for_center">{{ album.ALBUM_NAME }}</p>
+						<p id="album_year">{{ album.ALBUM_YEAR }}</p>
+					</div>
+				</div>
+			</a>
+			{% endfor %}
 		</div>
 	</div>
 </div>
