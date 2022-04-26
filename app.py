@@ -111,7 +111,7 @@ def index():
             album_list = []
             for i in range(len_songs):
                 album_list.append(albums[i])
-            joinTablesQuery = '''SELECT S.SONG_NAME song, A.ALBUM_NAME album, A.ALBUM_PHOTO album_art, U.NAME user, U.USER_ID id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
+            joinTablesQuery = '''SELECT S.SONG_NAME song, A.ALBUM_NAME album, A.ALBUM_ID album_id, A.ALBUM_PHOTO album_art, U.NAME user, U.USER_ID id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
             cursor.execute(joinTablesQuery, [search, search, search])
             jointQuery = cursor.fetchall()
             print('\n\nJOINT TABLE QUERY: \n', jointQuery)
@@ -327,10 +327,6 @@ def register_user():
     flash('Registration successful!')
     # time.sleep(3) 
     return render_template('login.html')
-
-@app.route('/top_songs')
-def topSongs():
-    return render_template('top_songs.html')
  
 @app.route("/logout")
 def logout():
@@ -347,6 +343,35 @@ def logout():
 def results():
     g.current_user_id = session['user_id']
     return render_template('results.html')
+
+@app.route('/album/<album_id>')
+@login_required
+def album(album_id):
+    current_user_id = session['user_id']
+    cursor = db.connection.cursor()
+    selectQuery = '''SELECT S.SONG_NAME song_name, S.DURATION duration, A.ALBUM_NAME album_name, A.ALBUM_PHOTO album_art, U.NAME artist_name, U.USER_ID user_id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER JOIN USER U ON A.USER_ID = U.USER_ID WHERE A.ALBUM_ID = %s'''
+    selectValues = [album_id]
+    cursor.execute(selectQuery, selectValues)
+    album_songs=cursor.fetchall()
+    print('\n\nALBUM SONGS: ', album_songs)
+    selectQuery = '''SELECT ALBUM_NAME FROM ALBUM WHERE ALBUM_ID=%s'''
+    selectValues = [album_id]
+    cursor.execute(selectQuery, selectValues)
+    album_name = cursor.fetchone()
+    print('\n\nALBUM NAME: ', album_name)
+    results = []
+    for i in range(len(album_songs)):
+        results.append(album_songs[i])
+    for i in range(len(album_songs)):
+        imageFile = results[i]['album_art'].decode('UTF-8')
+        fileName = imageFile.split(' ')
+        filename = fileName[1]
+        fileName = 'images/album/' + filename.strip("'")
+        imageInfo = url_for('static', filename = fileName)
+        results[i]['album_art'] = imageInfo
+    db.connection.commit()
+    cursor.close()
+    return render_template('album.html', results = results, album_name=album_name)
 
 @app.route('/create_album', methods=['POST', 'GET'])
 @login_required
