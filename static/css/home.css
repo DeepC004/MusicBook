@@ -48,6 +48,28 @@ body a:hover {
 	background-color: grey;
 }
 
+#artist_photo {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	border-radius: 5px;
+}
+
+.default_icon {
+	height: inherit;
+	width: inherit;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.fa-user {
+	/* height: 100%;
+	width: 100%; */
+	font-size: 5rem;
+
+}
+
 .lower {
 	margin-top: 5vh;
 }
