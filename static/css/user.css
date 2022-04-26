@@ -140,7 +140,7 @@ img {
 	justify-content: space-between;
 	align-items: center;
 	transition: all 0.15s ease-in-out;
-	border-bottom: #5E5E5E 0.7px solid;
+	border-bottom: #5e5e5e 0.7px solid;
 	padding-top: 0.6em;
 	padding-bottom: 0.6em;
 }
@@ -177,6 +177,22 @@ li {
 	width: 50px;
 	height: 50px;
 	margin: 0px auto;
+}
+
+#no-playlist-photo {
+	height: 100%;
+	width: 100%;
+	background: rgb(131, 58, 180);
+	background: linear-gradient(
+		211deg,
+		rgba(131, 58, 180, 1) 0%,
+		rgba(187, 95, 95, 1) 66%,
+		rgba(252, 176, 69, 1) 100%
+	);
+}
+
+.user_playlist_link {
+	text-decoration: none;
 }
 
 .item_style:hover {
@@ -228,7 +244,8 @@ li {
 	display: none;
 }
 
-.upload-btn, .image_and_btn {
+.upload-btn,
+.image_and_btn {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -236,8 +253,9 @@ li {
 	margin-left: 10px;
 }
 
-#upload_label, .submit-btn {
-	border: 1px solid #FFF;
+#upload_label,
+.submit-btn {
+	border: 1px solid #fff;
 	border-radius: 5px;
 	padding: 0.5em;
 	width: 120px;
@@ -256,7 +274,8 @@ li {
 	align-items: center;
 }
 
-.create_playlist, .release_album {
+.create_playlist,
+.release_album {
 	margin-right: 48px;
 	font-size: 1.2rem;
 }
