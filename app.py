@@ -231,9 +231,29 @@ def user(user_id):
     followValues = (current_user_id, userID)
     cursor.execute(followQuery, followValues)
     follows = cursor.fetchall()
+
+    albumQuery = '''SELECT * FROM ALBUM WHERE USER_ID = %s'''
+    cursor.execute(albumQuery, [userID])
+    user_albums = cursor.fetchall()
+    print(user_albums)
+
+    album_results = []
+    for i in range(len(user_albums)):
+        album_results.append(user_albums[i])
+    print('\n\nRESULTS: ', album_results)
+    for i in range(len(user_albums)):
+        if (album_results[i]['ALBUM_PHOTO'] is not None):
+            imageFile = album_results[i]['ALBUM_PHOTO'].decode('UTF-8')
+            fileName = imageFile.split(' ')
+            filename = fileName[1]
+            fileName = 'images/album/' + filename.strip("'")
+            imageInfo = url_for('static', filename = fileName)
+            album_results[i]['ALBUM_PHOTO'] = imageInfo
+
+
     db.connection.commit()
     cursor.close()
-    return render_template('user.html', user = userResults, follows = follows, playlists = results, song_count = songs[0]['song_count'], current_user_id = current_user_id)
+    return render_template('user.html', user = userResults, follows = follows, playlists = results, song_count = songs[0]['song_count'], current_user_id = current_user_id, albums = album_results)
  
 @app.route('/upload_profile_photo', methods=['POST', 'GET'])
 def upload_profile_photo():
