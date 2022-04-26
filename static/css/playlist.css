@@ -1,0 +1,92 @@
+body {
+	height: 100vh;
+	color: #fff;
+}
+
+img {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+}
+.result {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	width: 150vh;
+	height: 5.5em;
+	background-color: #fff;
+	border-radius: 1.2em;
+	color: #000;
+	margin: 1.2em 0;
+}
+
+.result div {
+	margin: 3em;
+}
+
+.album__art {
+	display: flex;
+	justify-content: center;
+	height: 50px;
+	width: 50px;
+	background-color: #000;
+}
+
+/*      CHECKBOX         */
+
+input[type="checkbox"] {
+	display: none;
+}
+
+input[type="checkbox"] + label {
+	position: relative;
+	padding-left: 35px;
+	display: inline-block;
+	font-size: 16px;
+}
+
+input[type="checkbox"] + label:before {
+	content: "\1F5A4";
+	top: -11px;
+	left: -8px;
+	border: 1px solid transparent;
+	padding: 10px;
+	border-radius: 3px;
+	display: block;
+	position: absolute;
+	transition: 0.5s ease;
+}
+
+input[type="checkbox"]:checked + label:before {
+	border: 1px solid transparent;
+	background-color: transparent;
+}
+
+input[type="checkbox"]:checked + label:after {
+	content: "\1F49B";
+	font-size: 18px;
+	position: absolute;
+	top: -1px;
+	left: 1px;
+	color: gold;
+	transition: 0.5s ease;
+}
+#addsongs__button {
+	width: 10em;
+	padding: 0.8em 3em;
+	background-color: #252525;
+	border: none;
+	color: #fff;
+	margin: 0.7em;
+	border-radius: 100px;
+	transition: all 100ms;
+}
