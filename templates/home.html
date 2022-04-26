@@ -18,7 +18,17 @@ head %}
 					<a href="{{ url_for('user', user_id=top_artist.USER_ID ) }}">
 						<div class="artist_info">
 							<div class="artist_image">
-								<img src="{{ top_artist.USER_PHOTO }}" alt="" />
+								{% if top_artist.USER_PHOTO is not none %}
+								<img
+									id="artist_photo"
+									src="{{ top_artist.USER_PHOTO }}"
+									alt=""
+								/>
+								{% else %}
+								<div class="default_icon">
+									<i class="fa-solid fa-user"></i>
+								</div>
+								{% endif %}
 							</div>
 							<div class="artist_name">{{ top_artist.NAME }}</div>
 						</div>

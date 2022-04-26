@@ -57,7 +57,15 @@ def index():
     top_artists = []
     for user in users:
         top_artists.append(user)
-    print(top_artists)
+    for i in range(len(top_artists)):
+        if (top_artists[i]['USER_PHOTO'] is not None):
+            imageFile = top_artists[i]['USER_PHOTO'].decode('UTF-8')
+            fileName = imageFile.split(' ')
+            filename = fileName[1]
+            fileName = 'images/user/' + filename.strip("'")
+            imageInfo = url_for('static', filename = fileName)
+            top_artists[i]['USER_PHOTO'] = imageInfo
+    print('\n\nTOP ARTISTS: ', top_artists)
     db.connection.commit()
     cursor.close()
     if request.method == "POST":
@@ -175,12 +183,13 @@ def user(user_id):
         results.append(playlists[i])
     print('\n\nRESULTS: ', results)
     for i in range(len(playlists)):
-        imageFile = results[i]['PLAYLIST_PHOTO'].decode('UTF-8')
-        fileName = imageFile.split(' ')
-        filename = fileName[1]
-        fileName = 'images/playlist/' + filename.strip("'")
-        imageInfo = url_for('static', filename = fileName)
-        results[i]['PLAYLIST_PHOTO'] = imageInfo
+        if (results[i]['PLAYLIST_PHOTO'] is not None):
+            imageFile = results[i]['PLAYLIST_PHOTO'].decode('UTF-8')
+            fileName = imageFile.split(' ')
+            filename = fileName[1]
+            fileName = 'images/playlist/' + filename.strip("'")
+            imageInfo = url_for('static', filename = fileName)
+            results[i]['PLAYLIST_PHOTO'] = imageInfo
     userResults = []
     userResults.append(userDetails)
     print('USER RESULTS:\n\n', userResults)
