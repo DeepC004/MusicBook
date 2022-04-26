@@ -87,9 +87,19 @@
 						value="{{ user.USER_ID }}"
 					/>
 					{% if follows | length == 0 %}
-					<input type="submit" class="btn follow-btn" id="follow_btn" value="Follow">
+					<input
+						type="submit"
+						class="btn follow-btn"
+						id="follow_btn"
+						value="Follow"
+					/>
 					{% else %}
-					<input type="submit" class="btn follow-btn" id="follow_btn" value="Following">
+					<input
+						type="submit"
+						class="btn follow-btn"
+						id="follow_btn"
+						value="Following"
+					/>
 					{% endif %}
 				</form>
 			</div>
@@ -121,26 +131,40 @@
 			{% else %}
 			<ul class="list">
 				{% for playlist in playlists %}
-				<li class="item_style">
-					<div class="list_image">
-						<img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo" />
-					</div>
-					<div class="list_data">
-						<p class="collection_name">{{ playlist.PLAYLIST_NAME }}</p>
-						<p>{{ playlist.PLAYLIST_YEAR }}</p>
-					</div>
-				</li>
-				{% endfor %}
-				{% for album in albums %}
-				<li class="item_style">
-					<div class="list_image">
-						<img src="{{ album.ALBUM_PHOTO }}" alt="album photo" />
-					</div>
-					<div class="list_data">
-						<p class="collection_name">{{ album.ALBUM_NAME }}</p>
-						<p>{{ album.ALBUM_YEAR }}</p>
-					</div>
-				</li>
+				<a
+					href="{{ url_for('playlist', playlist_id=playlist.PLAYLIST_ID) }}"
+					class="user_playlist_link"
+				>
+					<li class="item_style">
+						<div class="list_image">
+							{% if playlist.PLAYLIST_PHOTO is not none %}
+							<img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo" />
+							{% else %}
+							<p id="no-playlist-photo"></p>
+							{% endif %}
+						</div>
+						<div class="list_data">
+							<p class="collection_name">{{ playlist.PLAYLIST_NAME }}</p>
+							<p>{{ playlist.PLAYLIST_YEAR }}</p>
+						</div>
+					</li>
+				</a>
+				{% endfor %} {% for album in albums %}
+				<a
+					href="{{ url_for('album', album_id=album.ALBUM_ID) }}"
+					class="user_playlist_link"
+				>
+					<li class="item_style">
+						<div class="list_image">
+							<img src="{{ album.ALBUM_PHOTO }}" alt="album photo" />
+						</div>
+						<div class="list_data">
+							<p class="collection_name">{{ album.ALBUM_NAME }}</p>
+							<p>{{ album.ALBUM_YEAR }}</p>
+						</div>
+					</li>
+				</a>
+
 				{% endfor %}
 			</ul>
 			{% endif %}
