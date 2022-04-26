@@ -135,11 +135,14 @@ img {
 .item_style {
 	margin: 0px 0px;
 	width: auto;
-	height: 60px;
+	height: 80px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	transition: all 0.15s ease-in-out;
+	border-bottom: #5E5E5E 0.7px solid;
+	padding-top: 0.6em;
+	padding-bottom: 0.6em;
 }
 
 .list li:hover {
@@ -163,6 +166,10 @@ li {
 
 .list_data p {
 	margin-top: 16px;
+}
+
+.collection_name {
+	width: 5em;
 }
 
 .list_image {
@@ -247,4 +254,9 @@ li {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+
+.create_playlist, .release_album {
+	margin-right: 48px;
+	font-size: 1.2rem;
 }
