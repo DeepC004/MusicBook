@@ -4,7 +4,7 @@ body a {
 }
 
 body a:hover {
-	color: #48CAE4;
+	color: #48cae4;
 }
 
 .container {
@@ -63,11 +63,8 @@ body a:hover {
 	justify-content: center;
 }
 
-.fa-user {
-	/* height: 100%;
-	width: 100%; */
+#user_default_photo {
 	font-size: 5rem;
-
 }
 
 .lower {
@@ -95,9 +92,10 @@ body a:hover {
 	margin-left: 1.7em;
 }
 
-.album_container:hover, .lower_text:hover {
+.album_container:hover,
+.lower_text:hover {
 	cursor: pointer;
-	background-color: #48CAE4;
+	background-color: #48cae4;
 }
 
 .lower_size {
