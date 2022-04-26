@@ -361,9 +361,42 @@ def create_album():
     else:
         return render_template('create_album.html')
 
-@app.route('/playlist')
-def playlist():
-    return render_template('playlist.html')
+@app.route('/playlist', defaults={'playlist_id': None})
+@app.route('/playlist/<playlist_id>')
+@login_required
+def playlist(playlist_id):
+    user_id = session['user_id']
+    cursor = db.connection.cursor()
+    if playlist_id is None:
+        defaultPlaylistQuery = '''SELECT PLAYLIST_ID FROM PLAYLIST WHERE USER_ID = %s AND PLAYLIST_NAME = %s'''
+        cursor.execute(defaultPlaylistQuery, [user_id, 'Liked Songs'])
+        playlist = cursor.fetchall()
+        # print(playlist[0]['PLAYLIST_ID'])
+        playlist_id = playlist[0]['PLAYLIST_ID']
+        # print(playlist_id)
+    playlistQuery = '''SELECT * FROM PLAYLIST WHERE PLAYLIST_ID = %s'''
+    cursor.execute(playlistQuery, [playlist_id])
+    playlistDetails = cursor.fetchall()
+    playlistDetails = playlistDetails[0]
+    print(playlistDetails)
+    selectQuery = '''SELECT S.SONG_NAME song_name, A.ALBUM_YEAR album_year, A.ALBUM_NAME album_name, A.ALBUM_PHOTO album_art, U.NAME artist_name FROM SONG S, ALBUM A, USER U WHERE S.ALBUM_ID = A.ALBUM_ID AND A.USER_ID = U.USER_ID AND S.SONG_ID IN (SELECT SONG_ID FROM PLAYLIST_HAS_SONGS WHERE PLAYLIST_ID=%s)'''
+    selectValues = [playlist_id]
+    cursor.execute(selectQuery, selectValues)
+    playlist_songs=cursor.fetchall()
+    results = []
+    for i in range(len(playlist_songs)):
+        results.append(playlist_songs[i])
+    for i in range(len(playlist_songs)):
+        imageFile = results[i]['album_art'].decode('UTF-8')
+        fileName = imageFile.split(' ')
+        filename = fileName[1]
+        fileName = 'images/album/' + filename.strip("'")
+        imageInfo = url_for('static', filename = fileName)
+        results[i]['album_art'] = imageInfo
+    db.connection.commit()
+    cursor.close()
+    print(results)
+    return render_template('playlist.html', results = results, playlist = playlistDetails)
 
 @app.route('/create_playlist', methods=['POST', 'GET'])
 def create_playlist():
