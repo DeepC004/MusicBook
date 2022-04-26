@@ -138,7 +138,7 @@ def index():
             album_list = []
             for i in range(len_songs):
                 album_list.append(albums[i])
-            joinTablesQuery = '''SELECT S.SONG_NAME song, A.ALBUM_NAME album, A.ALBUM_ID album_id, A.ALBUM_PHOTO album_art, U.NAME user, U.USER_ID id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
+            joinTablesQuery = '''SELECT S.SONG_NAME song, S.SONG_ID song_id, A.ALBUM_NAME album, A.ALBUM_ID album_id, A.ALBUM_PHOTO album_art, U.NAME user, U.USER_ID id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
             cursor.execute(joinTablesQuery, [search, search, search])
             jointQuery = cursor.fetchall()
             print('\n\nJOINT TABLE QUERY: \n', jointQuery)
@@ -155,9 +155,11 @@ def index():
                 results[i]['album_art'] = imageInfo
             # print('Albums: ', albums)
             # print('Artists: ', artists)
+            cursor.execute("SELECT * FROM PLAYLIST WHERE user_id=%s", [session['user_id']])
+            current_playlists=cursor.fetchall()
             db.connection.commit()
             cursor.close()
-            return render_template('results.html', results = results)
+            return render_template('results.html', results = results, current_playlists=current_playlists)
         else:
             return render_template('error.html')
     else:
@@ -462,6 +464,32 @@ def create_album():
         return redirect('/user')
     else:
         return render_template('create_album.html')
+
+@app.route('/add_to_playlist', methods=['POST', 'GET'])
+def addToPlaylist():
+    if request.method=='POST':
+        song_id = request.form['song__id']
+        print('')
+        playlist_name = request.form['playlist__name']
+        playlistId= request.form['playlist__id']
+        user_id = session['user_id']
+        cursor = db.connection.cursor()
+        # !--- Playlist ID, Playlist Name, Playlist Year, User ID, Playlist_Photo
+        cursor.execute("SELECT PLAYLIST_ID FROM PLAYLIST WHERE PLAYLIST_NAME=%s AND USER_ID=%s", (playlist_name, user_id))
+        playlist_id=cursor.fetchall()
+        toParse=playlist_id[0]["PLAYLIST_ID"]
+        cursor.execute("SELECT * FROM PLAYLIST_HAS_SONGS WHERE PLAYLIST_ID= %s AND SONG_ID=%s", (toParse, song_id))
+        playlistSongs = cursor.fetchall()
+        print(playlistSongs)
+        print('\n\nTO PARSE: ', toParse)
+        print('\n\nSONG ID: ', song_id)
+        if len(playlistSongs)==0 :
+            cursor.execute("INSERT INTO PLAYLIST_HAS_SONGS VALUES (%s, %s)", (toParse, song_id))
+            db.connection.commit()
+            cursor.close()
+        return redirect(f'playlist/{playlistId}')
+    else:
+        return render_template('results.html')
 
 @app.route('/playlist', defaults={'playlist_id': None})
 @app.route('/playlist/<playlist_id>')
