@@ -112,7 +112,7 @@
 		</div>
 		{% endif %}
 		<div class="show_playlists scroll">
-			{% if playlists | length < 1 %}
+			{% if playlists | length < 1 and albums | length < 1 %}
 			<div class="display_text">
 				<p class="message">
 					No user music yet <i class="fa-solid fa-music"></i>
@@ -126,8 +126,19 @@
 						<img src="{{ playlist.PLAYLIST_PHOTO }}" alt="playlist photo" />
 					</div>
 					<div class="list_data">
-						<p>{{ playlist.PLAYLIST_NAME }}</p>
+						<p class="collection_name">{{ playlist.PLAYLIST_NAME }}</p>
 						<p>{{ playlist.PLAYLIST_YEAR }}</p>
+					</div>
+				</li>
+				{% endfor %}
+				{% for album in albums %}
+				<li class="item_style">
+					<div class="list_image">
+						<img src="{{ album.ALBUM_PHOTO }}" alt="album photo" />
+					</div>
+					<div class="list_data">
+						<p class="collection_name">{{ album.ALBUM_NAME }}</p>
+						<p>{{ album.ALBUM_YEAR }}</p>
 					</div>
 				</li>
 				{% endfor %}
