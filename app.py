@@ -66,6 +66,24 @@ def index():
             imageInfo = url_for('static', filename = fileName)
             top_artists[i]['USER_PHOTO'] = imageInfo
     print('\n\nTOP ARTISTS: ', top_artists)
+
+    latestSongsQuery = '''SELECT * FROM ALBUM ORDER BY ALBUM_ID DESC LIMIT 5'''
+    cursor.execute(latestSongsQuery)
+    latestAlbums = cursor.fetchall()
+    print('\n\nLatest Albums: ', latestAlbums)
+    latest_albums = []
+    for i in range(len(latestAlbums)):
+        latest_albums.append(latestAlbums[i])
+    for i in range(len(latestAlbums)):
+        imageFile = latest_albums[i]['ALBUM_PHOTO'].decode('UTF-8')
+        fileName = imageFile.split(' ')
+        filename = fileName[1]
+        fileName = 'images/album/' + filename.strip("'")
+        imageInfo = url_for('static', filename = fileName)
+        latest_albums[i]['ALBUM_PHOTO'] = imageInfo
+
+    print('\n\nLatest Albums: ', latestAlbums)
+
     db.connection.commit()
     cursor.close()
     if request.method == "POST":
@@ -112,12 +130,11 @@ def index():
             # print('Artists: ', artists)
             db.connection.commit()
             cursor.close()
-            # return render_template('results.html', albums = albums, artists = artists, songs = songs, len_albums = len_albums, len_artists = len_artists, len_songs = len_songs, results = results)
             return render_template('results.html', results = results)
         else:
             return render_template('error.html')
     else:
-        return render_template('home.html', top_artists = top_artists)
+        return render_template('home.html', top_artists = top_artists, latest_albums = latest_albums)
 
  
  
