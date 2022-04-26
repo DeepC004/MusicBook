@@ -1,43 +1,57 @@
-{% extends "app_layout.html" %}
+{% extends "app_layout.html" %} 
 
 {% block title %} Results {% endblock %} 
 
 {%block head %}
 	<link rel="stylesheet" href="../static/css/results.css" />
-{% endblock %}
+{% endblock %} 
 
 {% block page_title %}
 	<h1>Results</h1>
-{% endblock %}
+{% endblock %} 
 
 {% block body %}
-	<div class="wrapper">
-		{% if results %}
-			{% for result in results %}
-				<div class="results">
-					<form action="/add_to_playlist" method="POST">
-						<div class="result">
-							<div class="album__art"><img src="{{ result.album_art }}" alt=""></div>
-							<div class="song__name">{{ result.song }}</div>
-							<div class="artist__name">
-								<a href="{{ url_for('user', user_id=result.id ) }}">
-									{{ result.user }}
-								</a>
-							</div>
-							<div class="album__name">
-								<a href="{{ url_for('album', album_id=result.album_id ) }}">	
-									{{ result.album }}
-								</a>
-							</div>
-							<div class="add_to_playlist">
-								<button class="add_button" value=""><i class="fa-solid fa-heart"></i></button>
-							</div>
-						</div>
-					</form>
+<div class="wrapper">
+	{% if results %} 
+	{% for result in results %}
+	<div class="results">
+		<form action="/add_to_playlist" method="POST">
+			<div class="result">
+				<div class="album__art">
+					<img src="{{ result.album_art }}" alt="" />
 				</div>
-			{% endfor %}
-		{% else %}
-			<h1>Sorry, we couldn't find what you were looking for :(</h1>
-		{% endif %}
+				<div class="song__name">{{ result.song }}</div>
+				<div class="artist__name">
+					<a href="{{ url_for('user', user_id=result.id ) }}">
+						{{ result.user }}
+					</a>
+				</div>
+				<div class="album__name">{{ result.album }}</div>
+				{% if current_playlists %}
+				<input type="hidden" name="song__id" value="{{ result.song_id }}" />
+				<select name="playlist__name" class="playlist__name" id="dropDown">
+					<option value="none" selected disabled hidden>Add to Playlist</option>
+					{% for playlist in current_playlists %}
+					<option value="{{ playlist.PLAYLIST_NAME }}">
+						{{ playlist.PLAYLIST_NAME }}
+					</option>
+					<input
+						type="hidden"
+						name="playlist__id"
+						value="{{ playlist.PLAYLIST_ID }}"
+					/>
+					{% endfor %}
+				</select>
+				<div class="add_to_playlist">
+					<button type="submit" class="btn btn-dark">Add</button>
+				</div>
+				{% endif %}
+			</div>
+		</form>
 	</div>
+	{% endfor %} 
+	{% else %}
+		<h1>Sorry, we couldn't find what you were looking for :(</h1>
+	{% endif %}
+</div>
 {% endblock %}
