@@ -5,6 +5,7 @@ head %}
 {% endblock %} {% block page_title %}
 <h1>Home</h1>
 {% endblock %} {% block body %}
+
 <div class="home">
 	<div class="upper">
 		<div class="upper_title">
@@ -43,12 +44,11 @@ head %}
 	</div>
 	<div class="lower">
 		<div class="lower_title">
-			<h3>Latest Music</h3>
+			<h3>Latest Albums</h3>
 		</div>
 		<div class="lower_content">
 			{% for album in latest_albums %}
-
-			<a href="#">
+			<a href="{{ url_for('album', album_id=album.ALBUM_ID ) }}">
 				<div class="liked_songs lower_size album_container">
 					<div class="lower_image">
 						<img
@@ -64,42 +64,52 @@ head %}
 				</div>
 			</a>
 			{% endfor %}
-			{% for album in latest_albums %}
-
-			<a href="#">
-				<div class="liked_songs lower_size album_container">
-					<div class="lower_image">
-						<img
-							id="album_art"
-							src="{{ album.ALBUM_PHOTO }}"
-							alt="album photo"
-						/>
-					</div>
-					<div class="lower_text">
-						<p class="for_center">{{ album.ALBUM_NAME }}</p>
-						<p id="album_year">{{ album.ALBUM_YEAR }}</p>
-					</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col" id="left-col">
+				<h3>Quick Access</h3>
+				<div class="quick-collection">
+					<a href="{{ url_for('playlist') }}">
+						<div
+							class="liked_songs lower_size album_container"
+							id="quick-access"
+						>
+							<div class="lower_image">
+								{% if quick_access[0].PLAYLIST_PHOTO is not none %}
+								<img
+									id="album_art"
+									src="{{ quick_access[0].PLAYLIST_PHOTO }}"
+									alt="album photo"
+								/>
+								{% else %}
+								<p id="no-image-case"></p>
+								{% endif %}
+							</div>
+							<div class="lower_text">
+								<p class="for_center">Liked Songs</p>
+								<p id="album_year">{{ quick_access[0].PLAYLIST_YEAR }}</p>
+							</div>
+						</div>
+					</a>
 				</div>
-			</a>
-			{% endfor %}
-			{% for album in latest_albums %}
-
-			<a href="#">
-				<div class="liked_songs lower_size album_container">
-					<div class="lower_image">
-						<img
-							id="album_art"
-							src="{{ album.ALBUM_PHOTO }}"
-							alt="album photo"
-						/>
-					</div>
-					<div class="lower_text">
-						<p class="for_center">{{ album.ALBUM_NAME }}</p>
-						<p id="album_year">{{ album.ALBUM_YEAR }}</p>
-					</div>
+			</div>
+			<div class="col" id="right-col">
+				<h3>Latest Songs</h3>
+				<div class="songs_list">
+					{% for song in latest_songs %}
+					<a href="{{ url_for('album', album_id=song.album_id ) }}">
+						<div class="song">
+							<p id="song-photo"><i class="fa-solid fa-music"></i></p>
+							<p id="song-name">{{ song.song_name }}</p>
+							<p id="song-album">{{ song.album_name }}</p>
+						</div>
+					</a>
+					<hr id="song-break" />
+					{% endfor %}
 				</div>
-			</a>
-			{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>
