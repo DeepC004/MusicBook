@@ -1,0 +1,48 @@
+body a {
+    text-decoration: none;
+    color: white;
+}
+
+body a:hover {
+    color: aqua;
+}
+
+.header {
+    background-color: black;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.main_content {
+    margin-left: 120px;
+    background-color: black;
+    margin-right: 5vw;
+    padding-right: 1vw;
+}
+
+.main_list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.item_style {
+    display: flex;
+    justify-content: space-around;
+    margin: 1vh 0;
+    background-color: rgb(138, 138, 138);
+    padding: 1vh 0;
+    border-radius: 8px;
+}
+
+.album__art {
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+    background-color: rgb(159, 241, 255);
+}

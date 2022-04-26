@@ -1,0 +1,41 @@
+{% extends "app_layout.html" %} {% block title %} Top Songs {% endblock %} {%
+block head %} <link rel="stylesheet" href="../static/css/top_songs.css" /> {%
+endblock %} {% block page_title %}
+<div id="myHeader" class="header">
+    <h2>Top Songs</h2>
+</div>
+{% endblock %} {% block body %}
+<div class="main_content">
+    <ul class="main_list">
+        {% if top_songs %} {% for i in range(len(top_songs)) %}
+        <li class="item_style">
+            <div class="album__art">Image here</div>
+            <div class="song__name">{{ top_songs[i].SONG_NAME }}</div>
+            <div class="artist__name">
+                <a href="#">{{ top_users[i].USER_NAME }}</a>
+            </div>
+            <div class="album__name">{{ top_albums[i].ALBUM_NAME }}</div>
+        </li>
+        {% endfor %} {% else %}
+        <h1>No top songs yet</h1>
+        {% endif %}
+    </ul>
+</div>
+
+<script>
+    window.onscroll = function () {
+        myFunction();
+    };
+
+    var header = document.getElementById("myHeader");
+    var sticky = header.offsetTop;
+
+    function myFunction() {
+        if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+        } else {
+            header.classList.remove("sticky");
+        }
+    }
+</script>
+{% endblock %}
