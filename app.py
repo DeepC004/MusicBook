@@ -67,7 +67,7 @@ def index():
             top_artists[i]['USER_PHOTO'] = imageInfo
     print('\n\nTOP ARTISTS: ', top_artists)
 
-    latestSongsQuery = '''SELECT * FROM ALBUM ORDER BY ALBUM_ID DESC LIMIT 5'''
+    latestSongsQuery = '''SELECT * FROM ALBUM ORDER BY ALBUM_ID DESC LIMIT 7'''
     cursor.execute(latestSongsQuery)
     latestAlbums = cursor.fetchall()
     print('\n\nLatest Albums: ', latestAlbums)
@@ -135,9 +135,9 @@ def index():
             song_list = []
             for i in range(len_songs):
                 song_list.append(songs[i])
-            album_list = []
-            for i in range(len_songs):
-                album_list.append(albums[i])
+            # album_list = []
+            # for i in range(len_songs):
+            #     album_list.append(albums[i])
             joinTablesQuery = '''SELECT S.SONG_NAME song, S.SONG_ID song_id, A.ALBUM_NAME album, A.ALBUM_ID album_id, A.ALBUM_PHOTO album_art, U.NAME user, U.USER_ID id FROM SONG S INNER JOIN ALBUM A ON S.ALBUM_ID = A.ALBUM_ID INNER  JOIN USER U ON A.USER_ID = U.USER_ID WHERE S.SONG_NAME LIKE %s OR A.ALBUM_NAME LIKE %s OR U.NAME LIKE %s'''
             cursor.execute(joinTablesQuery, [search, search, search])
             jointQuery = cursor.fetchall()
@@ -159,7 +159,12 @@ def index():
             current_playlists=cursor.fetchall()
             db.connection.commit()
             cursor.close()
-            return render_template('results.html', results = results, current_playlists=current_playlists)
+            print('\n\n Current Playlists: \n', current_playlists)
+            current_playlists_array = []
+            for pl in current_playlists:
+                current_playlists_array.append(pl)
+            print('\n\n Current Playlists Array: \n', current_playlists_array)
+            return render_template('results.html', results = results, current_playlists=current_playlists_array)
         else:
             return render_template('error.html')
     else:
@@ -331,8 +336,8 @@ def follow_request():
             cursor.execute(insertQuery, insertValue)
             updateFollowerQuery = '''UPDATE USER SET FOLLOWERS = FOLLOWERS + 1 WHERE USER_ID = %s'''
             updateFollowingQuery = '''UPDATE USER SET FOLLOWING = FOLLOWING + 1 WHERE USER_ID = %s'''
-            cursor.execute(updateFollowerQuery, (following_id))
-            cursor.execute(updateFollowingQuery, (follower_id))
+            cursor.execute(updateFollowerQuery, [following_id])
+            cursor.execute(updateFollowingQuery, [follower_id])
         else:
             removeQuery = '''DELETE FROM FOLLOWS WHERE FOLLOWER_ID = %s AND FOLLOWING_ID = %s'''
             cursor.execute(removeQuery, insertValue)
@@ -353,7 +358,7 @@ def register_user():
         password = request.form.get('password')
         hashed_password = generate_password_hash(password)
         cursor = db.connection.cursor()
-        cursor.execute("SELECT * FROM user WHERE email = %s", email)
+        cursor.execute("SELECT * FROM user WHERE email = %s", [email])
         duplicates = cursor.fetchall()
         if(len(duplicates) != 0):
             db.connection.commit()
