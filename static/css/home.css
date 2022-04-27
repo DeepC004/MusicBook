@@ -45,7 +45,12 @@ body a:hover {
 	height: 170px;
 	width: 150px;
 	border-radius: 5px;
-	background-color: grey;
+	background: hsla(210, 71%, 55%, 1);
+	background: linear-gradient(
+		135deg,
+		hsla(210, 71%, 55%, 1) 0%,
+		hsla(334, 77%, 69%, 1) 100%
+	);
 }
 
 #artist_photo {
@@ -168,7 +173,8 @@ body a:hover {
 
 .songs_list {
 	height: 250px;
-	width: 85%;
+	/* width: 85%; */
+	width: 90%;
 	background-color: #fff;
 	overflow: hidden;
 	overflow-x: visible;
@@ -211,13 +217,13 @@ body a:hover {
 #song-name {
 	color: #000;
 	margin: auto 35px;
-	width: 50px;
+	width: 120px;
 }
 
 #song-album {
 	color: #000;
 	margin: auto 35px;
-	width: 50px;
+	width: 120px;
 }
 
 #song-break {
