@@ -343,8 +343,8 @@ def follow_request():
             cursor.execute(removeQuery, insertValue)
             updateFollowerQuery = '''UPDATE USER SET FOLLOWERS = FOLLOWERS - 1 WHERE USER_ID = %s'''
             updateFollowingQuery = '''UPDATE USER SET FOLLOWING = FOLLOWING - 1 WHERE USER_ID = %s'''
-            cursor.execute(updateFollowerQuery, (following_id))
-            cursor.execute(updateFollowingQuery, (follower_id))
+            cursor.execute(updateFollowerQuery, [following_id])
+            cursor.execute(updateFollowingQuery, [follower_id])
         db.connection.commit()
         cursor.close()
     return redirect(f'/user/{following_id}')
