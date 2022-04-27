@@ -96,3 +96,11 @@ img {
     border: 1px solid #ccc;
     border-radius: 6px;
 }
+
+#delete-btn {
+    background-color: #ef233c;
+    padding: 0.75em 1.2em;
+    border-radius: 5px;
+    border: none;
+    margin-left: -33.5em;
+}
