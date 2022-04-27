@@ -25,7 +25,9 @@ img {
 .show_image {
 	width: 120px;
 	height: 120px;
-	background-color: grey;
+	background: hsla(192, 20%, 49%, 1);
+
+background: linear-gradient(72deg, hsla(192, 20%, 49%, 1) 18%, hsla(8, 91%, 54%, 1) 100%);
 	/* padding-left: 10px; */
 	/* margin-left: 30px; */
 	display: flex;
@@ -169,7 +171,8 @@ li {
 }
 
 .collection_name {
-	width: 5em;
+	width: 10em;
+	text-align: center;
 }
 
 .list_image {
