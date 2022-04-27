@@ -528,10 +528,15 @@ def playlist(playlist_id):
         fileName = 'images/album/' + filename.strip("'")
         imageInfo = url_for('static', filename = fileName)
         results[i]['album_art'] = imageInfo
+    playlistOwnerQuery = '''SELECT USER_ID FROM PLAYLIST WHERE PLAYLIST_ID = %s'''
+    cursor.execute(playlistOwnerQuery, selectValues)
+    playlist_owner = cursor.fetchall()
+    playlist_owner = playlist_owner[0]
+    print('\n\n Playlist Owner: ', playlist_owner)
     db.connection.commit()
     cursor.close()
     print(results)
-    return render_template('playlist.html', results = results, playlist = playlistDetails)
+    return render_template('playlist.html', playlist_id = playlist_id, results = results, playlist = playlistDetails, user_id = user_id, playlist_owner = playlist_owner)
 
 @app.route('/create_playlist', methods=['POST', 'GET'])
 def create_playlist():
@@ -559,7 +564,17 @@ def create_playlist():
         cursor.close()
         return redirect('/user')
     return render_template('create_playlist.html')
- 
+
+@app.route('/delete_playlist', methods=['POST', 'GET'])
+def delete_playlist():
+    if request.method == 'POST':
+        playlist_id = request.form['playlist_id']
+        cursor = db.connection.cursor()
+        deleteQuery = '''DELETE FROM PLAYLIST WHERE PLAYLIST_ID = %s'''
+        cursor.execute(deleteQuery, [playlist_id])
+        db.connection.commit()
+        cursor.close()
+    return redirect('/user')
  
 if __name__ == "__main__":
     app.run(debug=True)
