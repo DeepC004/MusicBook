@@ -514,7 +514,7 @@ def playlist(playlist_id):
     playlistDetails = cursor.fetchall()
     playlistDetails = playlistDetails[0]
     print(playlistDetails)
-    selectQuery = '''SELECT S.SONG_NAME song_name, A.ALBUM_YEAR album_year, A.ALBUM_NAME album_name, A.ALBUM_PHOTO album_art, U.NAME artist_name FROM SONG S, ALBUM A, USER U WHERE S.ALBUM_ID = A.ALBUM_ID AND A.USER_ID = U.USER_ID AND S.SONG_ID IN (SELECT SONG_ID FROM PLAYLIST_HAS_SONGS WHERE PLAYLIST_ID=%s)'''
+    selectQuery = '''SELECT S.SONG_NAME song_name, A.ALBUM_ID album_id, A.ALBUM_YEAR album_year, A.ALBUM_NAME album_name, A.ALBUM_PHOTO album_art, U.NAME artist_name, U.USER_ID artist_id FROM SONG S, ALBUM A, USER U WHERE S.ALBUM_ID = A.ALBUM_ID AND A.USER_ID = U.USER_ID AND S.SONG_ID IN (SELECT SONG_ID FROM PLAYLIST_HAS_SONGS WHERE PLAYLIST_ID=%s)'''
     selectValues = [playlist_id]
     cursor.execute(selectQuery, selectValues)
     playlist_songs=cursor.fetchall()
