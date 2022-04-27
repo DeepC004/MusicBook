@@ -85,9 +85,14 @@ img {
 }
 
 .playlist__name {
-    font-size: 15px;
+    width: 17vw;
     padding: 10px 8px 10px 14px;
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+
+.hiddenValue {
+    width: 2px;
+    height: auto;
 }

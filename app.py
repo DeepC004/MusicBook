@@ -476,7 +476,6 @@ def addToPlaylist():
         song_id = request.form['song__id']
         print('')
         playlist_name = request.form['playlist__name']
-        playlistId= request.form['playlist__id']
         user_id = session['user_id']
         cursor = db.connection.cursor()
         # !--- Playlist ID, Playlist Name, Playlist Year, User ID, Playlist_Photo
@@ -492,7 +491,7 @@ def addToPlaylist():
             cursor.execute("INSERT INTO PLAYLIST_HAS_SONGS VALUES (%s, %s)", (toParse, song_id))
             db.connection.commit()
             cursor.close()
-        return redirect(f'playlist/{playlistId}')
+        return redirect(f'playlist/{toParse}')
     else:
         return render_template('results.html')
 
