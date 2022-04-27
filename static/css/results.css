@@ -51,8 +51,12 @@ img {
 .album__name,
 .song__name,
 .artist__name {
-    width: 50px;
+    width: 100px;
     text-align: center;
+}
+
+.song__name {
+    width: 150px;
 }
 
 .artist__name a {
