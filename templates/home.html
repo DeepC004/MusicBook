@@ -71,16 +71,17 @@ head %}
 			<div class="col" id="left-col">
 				<h3>Quick Access</h3>
 				<div class="quick-collection">
-					<a href="{{ url_for('playlist') }}">
+					{% for qa in quick_access %}
+					<a href="{{ url_for('playlist', playlist_id=qa.PLAYLIST_ID) }}">
 						<div
 							class="liked_songs lower_size album_container"
 							id="quick-access"
 						>
 							<div class="lower_image">
-								{% if quick_access[0].PLAYLIST_PHOTO is not none %}
+								{% if qa.PLAYLIST_PHOTO is not none %}
 								<img
 									id="album_art"
-									src="{{ quick_access[0].PLAYLIST_PHOTO }}"
+									src="{{ qa.PLAYLIST_PHOTO }}"
 									alt="album photo"
 								/>
 								{% else %}
@@ -88,11 +89,12 @@ head %}
 								{% endif %}
 							</div>
 							<div class="lower_text">
-								<p class="for_center">Liked Songs</p>
-								<p id="album_year">{{ quick_access[0].PLAYLIST_YEAR }}</p>
+								<p class="for_center">{{ qa.PLAYLIST_NAME }}</p>
+								<p id="album_year">{{ qa.PLAYLIST_YEAR }}</p>
 							</div>
 						</div>
 					</a>
+					{% endfor %}
 				</div>
 			</div>
 			<div class="col" id="right-col">
