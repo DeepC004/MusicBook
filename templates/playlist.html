@@ -12,6 +12,12 @@
  
 {% block body %}
 	<div class="wrapper">
+		{% if playlist_owner.USER_ID == user_id %}
+		<form action="/delete_playlist" method="POST">
+			<input type="text" value="{{ playlist_id }}" name="playlist_id" hidden>
+			<button id="delete-btn" type="submit">DELETE PLAYLIST</button>
+		</form>
+		{% endif %}
 		{% if results %}
 			{% for result in results %}
 				<div class="results">
