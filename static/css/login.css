@@ -1,14 +1,46 @@
 body {
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
     background-color: #000;
-    color: #FFF;
+    color: #fff;
 }
 
 .container {
+    padding: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     height: 100vh;
+    width: 80vw;
+    height: 80vh;
+    transform: translateY(12%);
+}
+
+.right_side {
+    background-color: #252525;
+    width: 52vw;
+    height: auto;
+    border-radius: 1em 0 0 1em;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    background-color: #333333;
+    justify-content: center;
+    align-items: center;
+    width: 28vw;
+    border-radius: 0 1em 1em 0;
+}
+
+.welcome__header {
+    margin-bottom: 1em;
+}
+
+.login_image img {
+    width: 52vw;
+    height: 80vh;
+    margin: auto;
+    display: block;
+    border-radius: 1em 0 0 1em;
 }
 
 .user__input {
@@ -16,13 +48,12 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
 }
 
 .row input {
-    width: 20em;
+    width: 20vw;
     overflow: hidden;
-    padding: 1em 1em 1em 2em;
+    padding: 0.8em 0.7em 0.7em 0.8em;
     border: none;
 }
 
@@ -32,21 +63,21 @@ body {
 }
 
 .submit__button {
-    width: 10em;
-    padding: 0.8em 3em;
+    width: 5em;
+    padding: 0.6em 0em;
     background-color: #252525;
     border: none;
-    color: #FFF;
+    color: #fff;
 }
 
 .submit__button:hover {
-    background-color: #5E5E5E;
+    background-color: #5e5e5e;
 }
 
 .row input,
 .submit__button {
     margin: 0.7em;
-    border-radius: 100px;
+    border-radius: 7px;
 }
 
 .signup {
@@ -57,10 +88,10 @@ body {
 }
 
 a {
-    color: #FFF;
+    color: #fff;
     text-decoration: none;
 }
 
 a:hover {
-    color: #48CAE4;
+    color: #48cae4;
 }
