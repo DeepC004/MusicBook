@@ -19,11 +19,15 @@
 							<div class="album__art"><img src="{{ result.album_art }}" alt=""></div>
 							<div class="song__name">{{ result.song_name }}</div>
 							<div class="artist__name">
-								<a href="{{ url_for('user', user_id=result.id ) }}">
+								<a href="{{ url_for('user', user_id=result.artist_id ) }}">
 									{{ result.artist_name }}
 								</a>
 							</div>
-							<div class="album__name">{{ result.album }}</div>
+							<div class="album__name">
+								<a href="{{ url_for('album', album_id=result.album_id ) }}">
+									{{ result.album_name }}
+								</a>
+							</div>
                             <div class="duration">{{ result.album_year }}</div>
 						</div>
 				</div>
