@@ -104,3 +104,19 @@ img {
     border: none;
     margin-left: -33.5em;
 }
+
+#remove-btn {
+    color: #ef233c;
+    background-color: inherit;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    font-size: 1.6rem;
+    transition: transform 100ms linear;
+}
+
+#remove-btn:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
