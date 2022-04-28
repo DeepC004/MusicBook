@@ -35,6 +35,13 @@
 								</a>
 							</div>
                             <div class="duration">{{ result.album_year }}</div>
+							{% if playlist_owner.USER_ID == user_id %}
+							<form action="/remove_song" method="POST">
+								<input type="text" value="{{ result.song_id }}" name="song_id" hidden>
+								<input type="text" value="{{ playlist_id }}" name="playlist_id" hidden>
+								<button id="remove-btn" type="submit"><i class="fa-solid fa-circle-minus"></i></button>
+							</form>
+							{% endif %}
 						</div>
 				</div>
 			{% endfor %}
