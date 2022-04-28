@@ -514,7 +514,7 @@ def playlist(playlist_id):
     playlistDetails = cursor.fetchall()
     playlistDetails = playlistDetails[0]
     print(playlistDetails)
-    selectQuery = '''SELECT S.SONG_NAME song_name, A.ALBUM_ID album_id, A.ALBUM_YEAR album_year, A.ALBUM_NAME album_name, A.ALBUM_PHOTO album_art, U.NAME artist_name, U.USER_ID artist_id FROM SONG S, ALBUM A, USER U WHERE S.ALBUM_ID = A.ALBUM_ID AND A.USER_ID = U.USER_ID AND S.SONG_ID IN (SELECT SONG_ID FROM PLAYLIST_HAS_SONGS WHERE PLAYLIST_ID=%s)'''
+    selectQuery = '''SELECT S.SONG_NAME song_name, S.SONG_ID song_id, A.ALBUM_ID album_id, A.ALBUM_YEAR album_year, A.ALBUM_NAME album_name, A.ALBUM_PHOTO album_art, U.NAME artist_name, U.USER_ID artist_id FROM SONG S, ALBUM A, USER U WHERE S.ALBUM_ID = A.ALBUM_ID AND A.USER_ID = U.USER_ID AND S.SONG_ID IN (SELECT SONG_ID FROM PLAYLIST_HAS_SONGS WHERE PLAYLIST_ID=%s)'''
     selectValues = [playlist_id]
     cursor.execute(selectQuery, selectValues)
     playlist_songs=cursor.fetchall()
@@ -535,7 +535,7 @@ def playlist(playlist_id):
     print('\n\n Playlist Owner: ', playlist_owner)
     db.connection.commit()
     cursor.close()
-    print(results)
+    print('\n\nRESULTS: ', results)
     return render_template('playlist.html', playlist_id = playlist_id, results = results, playlist = playlistDetails, user_id = user_id, playlist_owner = playlist_owner)
 
 @app.route('/create_playlist', methods=['POST', 'GET'])
@@ -575,6 +575,18 @@ def delete_playlist():
         db.connection.commit()
         cursor.close()
     return redirect('/user')
- 
+
+@app.route('/remove_song', methods=['POST', 'GET'])
+def remove_song():
+    if request.method == 'POST':
+        playlist_id = request.form['playlist_id']
+        song_id = request.form['song_id']
+        cursor = db.connection.cursor()
+        removeQuery = '''DELETE FROM PLAYLIST_HAS_SONGS WHERE PLAYLIST_ID = %s AND SONG_ID = %s'''
+        cursor.execute(removeQuery, [playlist_id, song_id])
+        db.connection.commit()
+        cursor.close()
+    return redirect(f'/playlist/{ playlist_id }')
+
 if __name__ == "__main__":
     app.run(debug=True)
